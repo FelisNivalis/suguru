@@ -25,7 +25,19 @@ public partial class BoardNode: Node
                 int i1 = i / 3 * 3 + j / 3;
                 int j1 = i % 3 * 3 + j % 3;
                 int num = board.board[i1, j1];
-                (boardNode.GetChild(i).GetChild(0).GetChild(j) as Label).Text = num > 0 ? num.ToString() : "";
+                Node subgridNode = boardNode.GetNode(String.Format("%Grid{0}", i + 1)).GetNode(String.Format("%Subgrid{0}", j + 1));
+                if (num > 0)
+                {
+                    (subgridNode.GetNode("Options") as CanvasItem).Visible = false;
+                    (subgridNode.GetNode("Number") as CanvasItem).Visible = true;
+                    (subgridNode.GetNode("Number").GetNode("Label") as Label).Text = num.ToString();
+                }
+                else
+                {
+                    (subgridNode.GetNode("Options") as CanvasItem).Visible = true;
+                    (subgridNode.GetNode("Number") as CanvasItem).Visible = false;
+                    (subgridNode.GetNode("Number").GetNode("Label") as Label).Text = "";
+                }
             }
         }
     }

@@ -11,7 +11,7 @@ func _ready():
 
 func restart():
 	cs_board_node.Generate()
-	cs_board_node.UpdateGrids(get_node("/root/Control/BoardArea/BoardContainer/Board"))
+	cs_board_node.UpdateGrids(get_node("/root/Control").get_node("%Board"))
 
 #func updateGrids():
 #	var board_node = get_node("/root/Control/BoardArea/BoardContainer/Board")

@@ -1,0 +1,40 @@
+[gd_scene load_steps=2 format=3 uid="uid://l8evb71tj6d8"]
+
+[ext_resource type="PackedScene" uid="uid://1583boypbj38" path="res://Subgrid.tscn" id="1"]
+
+[node name="GridContainer" type="PanelContainer"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Grid" type="GridContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 3
+
+[node name="Subgrid" parent="Grid" instance=ExtResource("1")]
+layout_mode = 2
+
+[node name="Subgrid2" parent="Grid" instance=ExtResource("1")]
+layout_mode = 2
+
+[node name="Subgrid3" parent="Grid" instance=ExtResource("1")]
+layout_mode = 2
+
+[node name="Subgrid4" parent="Grid" instance=ExtResource("1")]
+layout_mode = 2
+
+[node name="Subgrid5" parent="Grid" instance=ExtResource("1")]
+layout_mode = 2
+
+[node name="Subgrid6" parent="Grid" instance=ExtResource("1")]
+layout_mode = 2
+
+[node name="Subgrid7" parent="Grid" instance=ExtResource("1")]
+layout_mode = 2
+
+[node name="Subgrid8" parent="Grid" instance=ExtResource("1")]
+layout_mode = 2
+
+[node name="Subgrid9" parent="Grid" instance=ExtResource("1")]
+layout_mode = 2

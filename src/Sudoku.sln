@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33403.182
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sudoku", "Sudoku.csproj", "{A8840350-D9A5-4A0C-8381-44DCBAF62D66}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SudokuLib", "..\libs\SudokuLib\SudokuLib.csproj", "{1E794F6A-6E22-46F9-86A2-15FC8D465DCA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SudokuTest", "..\libs\SudokuTest\SudokuTest.csproj", "{BA9D026E-0176-42C6-A2E7-99CE1E5BDB70}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		ExportDebug|Any CPU = ExportDebug|Any CPU
+		ExportRelease|Any CPU = ExportRelease|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A8840350-D9A5-4A0C-8381-44DCBAF62D66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8840350-D9A5-4A0C-8381-44DCBAF62D66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8840350-D9A5-4A0C-8381-44DCBAF62D66}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
+		{A8840350-D9A5-4A0C-8381-44DCBAF62D66}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
+		{A8840350-D9A5-4A0C-8381-44DCBAF62D66}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
+		{A8840350-D9A5-4A0C-8381-44DCBAF62D66}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
+		{A8840350-D9A5-4A0C-8381-44DCBAF62D66}.Release|Any CPU.ActiveCfg = ExportRelease|Any CPU
+		{A8840350-D9A5-4A0C-8381-44DCBAF62D66}.Release|Any CPU.Build.0 = ExportRelease|Any CPU
+		{1E794F6A-6E22-46F9-86A2-15FC8D465DCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E794F6A-6E22-46F9-86A2-15FC8D465DCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E794F6A-6E22-46F9-86A2-15FC8D465DCA}.ExportDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E794F6A-6E22-46F9-86A2-15FC8D465DCA}.ExportDebug|Any CPU.Build.0 = Debug|Any CPU
+		{1E794F6A-6E22-46F9-86A2-15FC8D465DCA}.ExportRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{1E794F6A-6E22-46F9-86A2-15FC8D465DCA}.ExportRelease|Any CPU.Build.0 = Release|Any CPU
+		{1E794F6A-6E22-46F9-86A2-15FC8D465DCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E794F6A-6E22-46F9-86A2-15FC8D465DCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA9D026E-0176-42C6-A2E7-99CE1E5BDB70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA9D026E-0176-42C6-A2E7-99CE1E5BDB70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA9D026E-0176-42C6-A2E7-99CE1E5BDB70}.ExportDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA9D026E-0176-42C6-A2E7-99CE1E5BDB70}.ExportDebug|Any CPU.Build.0 = Debug|Any CPU
+		{BA9D026E-0176-42C6-A2E7-99CE1E5BDB70}.ExportRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{BA9D026E-0176-42C6-A2E7-99CE1E5BDB70}.ExportRelease|Any CPU.Build.0 = Release|Any CPU
+		{BA9D026E-0176-42C6-A2E7-99CE1E5BDB70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA9D026E-0176-42C6-A2E7-99CE1E5BDB70}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B5122ACE-1FBD-492D-89A3-963B127CBBB9}
+	EndGlobalSection
+EndGlobal

@@ -13,11 +13,12 @@ config_version=5
 config/name="Sudoku"
 run/main_scene="res://MainGame.tscn"
 config/features=PackedStringArray("4.0", "C#")
-config/icon="res://icon.png"
+config/icon="res://res/icon.png"
 
 [autoload]
 
-GlobalScript="*res://GlobalScript.gd"
+GlobalSettings="*res://scripts/GlobalSettings.gd"
+GlobalScript="*res://scripts/GlobalScript.gd"
 
 [dotnet]
 

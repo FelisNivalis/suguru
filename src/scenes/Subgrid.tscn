@@ -1,8 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://cddhemmip4bvg"]
+[gd_scene load_steps=5 format=3 uid="uid://b6sbahsh4hy05"]
 
 [ext_resource type="Script" path="res://scripts/Subgrid.gd" id="1_im61c"]
-[ext_resource type="PackedScene" uid="uid://cme7a0a8d7l66" path="res://scenes/Digit.tscn" id="2_foyaf"]
-[ext_resource type="StyleBox" uid="uid://ddmrgglyps6ih" path="res://styles/style_box_empty.tres" id="2_tvilr"]
+[ext_resource type="StyleBox" uid="uid://ddmrgglyps6ih" path="res://res/themes/style_box_empty.tres" id="2_bnbwj"]
+[ext_resource type="PackedScene" uid="uid://cwuoxf3hnse7i" path="res://scenes/Digit.tscn" id="2_foyaf"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6nrwl"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -45,7 +45,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_styles/panel = ExtResource("2_tvilr")
+theme_override_styles/panel = ExtResource("2_bnbwj")
 
 [node name="Candidates" type="GridContainer" parent="."]
 unique_name_in_owner = true
@@ -103,7 +103,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = ExtResource("2_tvilr")
+theme_override_styles/panel = ExtResource("2_bnbwj")
 
 [node name="AnswerLabel" type="Label" parent="Answer"]
 unique_name_in_owner = true

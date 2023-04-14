@@ -10,51 +10,64 @@ using SudokuLib.Strategy.Op;
 public partial class ClassicSudokuScriptNode: Node
 {
     public ClassicSudoku sudoku = new ClassicSudoku(42);
-    private Dictionary<string, Func<ClassicSudoku, int, int, IEnumerable<OpBase>>[]> strategyOnSubgridPresets = new()
+    private Dictionary<string, Func<ClassicSudoku, int, int, OpList>[]> strategyOnSubgridPresets = new()
     {
-        { "select_subgrid", new Func<ClassicSudoku, int, int, IEnumerable<OpBase>>[]
+        { "select_subgrid", new Func<ClassicSudoku, int, int, OpList>[]
         {
             HighlightSameDigit.Instance.ExecuteOnSubgrid,
             HighlightColumn.Instance.ExecuteOnSubgrid,
             HighlightRow.Instance.ExecuteOnSubgrid,
         } },
-        { "unselect_subgrid", new Func<ClassicSudoku, int, int, IEnumerable<OpBase>>[]
+        { "unselect_subgrid", new Func<ClassicSudoku, int, int, OpList>[]
         {
             UndoHighlightSameDigit.Instance.ExecuteOnSubgrid,
             UndoHighlightColumn.Instance.ExecuteOnSubgrid,
             UndoHighlightRow.Instance.ExecuteOnSubgrid,
         } },
-        { "unfill_subgrid", new Func<ClassicSudoku, int, int, IEnumerable<OpBase>>[]
+        { "unfill_subgrid", new Func<ClassicSudoku, int, int, OpList>[]
         {
             UnfillDigit.Instance.ExecuteOnSubgrid,
         } },
     };
-    private Dictionary<string, Func<ClassicSudoku, int, int, int, IEnumerable<OpBase>>[]> strategyOnDigitPresets = new()
+    private Dictionary<string, Func<ClassicSudoku, int, int, int, OpList>[]> strategyOnDigitPresets = new()
     {
-        { "fill_with", new Func<ClassicSudoku, int, int, int, IEnumerable<OpBase>>[]
+        { "fill_with", new Func<ClassicSudoku, int, int, int, OpList>[]
         {
             FillDigit.Instance.ExecuteOnDigit,
             BasicEliminate.Instance.ExecuteOnDigit,
         } },
-        { "eliminate_candidate", new Func<ClassicSudoku, int, int, int, IEnumerable<OpBase>>[]
+        { "eliminate_candidate", new Func<ClassicSudoku, int, int, int, OpList>[]
         {
-            (_, r, c, d) => new OpBase[] { new EliminateOp(r, c, d) },
+            (_, r, c, d) => new OpList { new EliminateOp(r, c, d) },
         } },
-        { "uneliminate_candidate", new Func<ClassicSudoku, int, int, int, IEnumerable<OpBase>>[]
+        { "uneliminate_candidate", new Func<ClassicSudoku, int, int, int, OpList>[]
         {
-            (_, r, c, d) => new OpBase[] { new UnEliminateOp(r, c, d) },
+            (_, r, c, d) => new OpList { new UnEliminateOp(r, c, d) },
         } },
     };
-    private Dictionary<string, Func<ClassicSudoku, IEnumerable<OpBase>>[]> strategyOnBoardPresets = new()
+    private Dictionary<string, Func<ClassicSudoku, OpList>[]> strategyOnBoardPresets = new()
     {
-        { "restart", new Func<ClassicSudoku, IEnumerable<OpBase>>[]
+        { "restart", new Func<ClassicSudoku, OpList>[]
         {
             UndoHighlightRow.Instance.ExecuteOnBoard,
             UndoHighlightSameDigit.Instance.ExecuteOnBoard,
-            _ => from r in Enumerable.Range(0, 9) from c in Enumerable.Range(0, 9) from d in Enumerable.Range(1, 9) select new UnEliminateOp(r, c, d) as OpBase,
+            _ => new OpList(
+                from r in Enumerable.Range(0, 9)
+                from c in Enumerable.Range(0, 9)
+                from d in Enumerable.Range(1, 9)
+                select new UnEliminateOp(r, c, d) as OpBase
+            ),
             FillDigit.Instance.ExecuteOnEverySubgridDigit,
             BasicEliminate.Instance.ExecuteOnEverySubgridDigit,
-        } }
+        } },
+        { "execute_naked_single", new Func<ClassicSudoku, OpList>[]
+        {
+            NakedSingle.Instance.ExecuteOnEverySubgrid,
+        } },
+        { "execute_hidden_single", new Func<ClassicSudoku, OpList>[]
+        {
+            HiddenSingle.Instance.ExecuteOnBoard,
+        } },
     };
 
     public Node GetGrid(int idx) => GetNode(String.Format("%Grid{0}", idx));

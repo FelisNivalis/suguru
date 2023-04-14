@@ -1,7 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://cme7a0a8d7l66"]
+[gd_scene load_steps=3 format=3 uid="uid://cwuoxf3hnse7i"]
 
 [ext_resource type="Script" path="res://scripts/Digit.gd" id="1_2r5tf"]
-[ext_resource type="StyleBox" uid="uid://ddmrgglyps6ih" path="res://styles/style_box_empty.tres" id="1_kxlyu"]
+[ext_resource type="StyleBox" uid="uid://ddmrgglyps6ih" path="res://res/themes/style_box_empty.tres" id="2_o4qa8"]
 
 [node name="Digit" type="Control"]
 layout_mode = 3
@@ -23,13 +23,13 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
-theme_override_styles/panel = ExtResource("1_kxlyu")
+theme_override_styles/panel = ExtResource("2_o4qa8")
 
 [node name="BgCircle" type="Panel" parent="Content"]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
-theme_override_styles/panel = ExtResource("1_kxlyu")
+theme_override_styles/panel = ExtResource("2_o4qa8")
 
 [node name="MarginContainer" type="MarginContainer" parent="Content"]
 clip_contents = true

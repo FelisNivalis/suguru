@@ -1,8 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://cemewhroxy04d"]
+[gd_scene load_steps=5 format=3 uid="uid://c37yjiird0n8b"]
 
 [ext_resource type="Script" path="res://scripts/Grid.gd" id="1_vdqwi"]
-[ext_resource type="StyleBox" uid="uid://ddmrgglyps6ih" path="res://styles/style_box_empty.tres" id="2_2noce"]
-[ext_resource type="PackedScene" uid="uid://cddhemmip4bvg" path="res://scenes/Subgrid.tscn" id="2_8vsss"]
+[ext_resource type="PackedScene" uid="uid://b6sbahsh4hy05" path="res://scenes/Subgrid.tscn" id="2_8vsss"]
+[ext_resource type="StyleBox" uid="uid://ddmrgglyps6ih" path="res://res/themes/style_box_empty.tres" id="2_b1rtw"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_25i6v"]
 content_margin_left = 0.0
@@ -45,7 +45,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_styles/panel = ExtResource("2_2noce")
+theme_override_styles/panel = ExtResource("2_b1rtw")
 
 [node name="Subgrids" type="GridContainer" parent="."]
 layout_mode = 1

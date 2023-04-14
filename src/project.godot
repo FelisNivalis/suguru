@@ -17,7 +17,6 @@ config/icon="res://res/icon.png"
 
 [autoload]
 
-GlobalSettings="*res://scripts/GlobalSettings.gd"
 GlobalScript="*res://scripts/GlobalScript.gd"
 
 [dotnet]

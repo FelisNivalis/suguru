@@ -25,3 +25,7 @@ func execute(node, strategy):
 			cs_board_script_node.ExecuteStrategiesOnSubgrid(node.idx_grid, node.idx_subgrid, strategy)
 		GlobalScript.NodeType.Digit:
 			cs_board_script_node.ExecuteStrategiesOnDigit(node.subgrid_node.idx_grid, node.subgrid_node.idx_subgrid, node.digit, strategy)
+
+
+func execute_on_board(strategy):
+	execute(self, strategy)

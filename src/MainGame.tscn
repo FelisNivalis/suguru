@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://pvvqtp85di3w"]
 
 [ext_resource type="Script" path="res://scripts/MainGame.gd" id="1_3cs3r"]
-[ext_resource type="PackedScene" uid="uid://cemewhroxy04d" path="res://scenes/Grid.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://c37yjiird0n8b" path="res://scenes/Grid.tscn" id="2"]
 [ext_resource type="Script" path="res://scripts/ClassicSudokuScriptNode.cs" id="3_sj38m"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_77mmc"]
@@ -158,9 +158,17 @@ horizontal_alignment = 1
 layout_mode = 2
 text = "Restart"
 
-[node name="EliminateButton" type="Button" parent="HSplitContainer/Menu/MarginContainer/VBoxContainer"]
+[node name="CheckBox" type="CheckBox" parent="HSplitContainer/Menu/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "Resolve"
+text = "Show Error"
+
+[node name="NakedSingleButton" type="Button" parent="HSplitContainer/Menu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Naked Single"
+
+[node name="HiddenSingleButton" type="Button" parent="HSplitContainer/Menu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Hidden Single"
 
 [node name="CSScript" type="Control" parent="."]
 unique_name_in_owner = true
@@ -170,4 +178,5 @@ offset_bottom = 40.0
 script = ExtResource("3_sj38m")
 
 [connection signal="pressed" from="HSplitContainer/Menu/MarginContainer/VBoxContainer/RestartButton" to="CSScript" method="Restart"]
-[connection signal="pressed" from="HSplitContainer/Menu/MarginContainer/VBoxContainer/EliminateButton" to="CSScript" method="Eliminate"]
+[connection signal="pressed" from="HSplitContainer/Menu/MarginContainer/VBoxContainer/NakedSingleButton" to="." method="execute_on_board" binds= ["execute_naked_single"]]
+[connection signal="pressed" from="HSplitContainer/Menu/MarginContainer/VBoxContainer/HiddenSingleButton" to="." method="execute_on_board" binds= ["execute_hidden_single"]]

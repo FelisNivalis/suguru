@@ -4,6 +4,7 @@ namespace SudokuLib
     {
         public int[,] board = new int[9, 9];
         public int[,] answer = new int[9, 9];
+        public int[,,] candidates = new int[9, 9, 9];
         protected int seed = -1;
         protected Random rand;
 
@@ -11,6 +12,7 @@ namespace SudokuLib
         {
             board = other.board.Clone() as int[,];
             answer = other.answer.Clone() as int[,];
+            candidates = other.candidates.Clone() as int[,,];
             rand = other.rand;
             seed = other.seed;
         }
@@ -59,7 +61,7 @@ namespace SudokuLib
         {
             board = new int[9, 9];
             answer = new int[9, 9];
-            rand = seed < 0 ? new Random() : new Random(seed);
+            //rand = seed < 0 ? new Random() : new Random(seed);
         }
 
         protected bool Solve(out int[,]? answer, ref int[,] board, out bool unique)

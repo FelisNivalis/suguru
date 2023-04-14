@@ -1,28 +1,27 @@
 extends Control
 
-var cs_board_script = load("res://scripts/BoardScriptNode.cs")
-@onready var board_node: Control = get_node("%Board")
-@onready var cs_board_script_node = new_board_script_node()
+var type = GlobalScript.NodeType.Game
+@onready var cs_board_script_node = get_node("%CSScript")
+@onready var dispatcher = GlobalScript.dispatcher_script.new(
+	range(1, 10).map(func(i): return get_node("%%Grid%d" % i)), self)
 
 
-func new_board_script_node():
-	var script_node = cs_board_script.new()
-	script_node.boardNode = board_node
-	return script_node
+var selected_node = null
 
 
 func _ready():
 	restart()
 
 
-func _on_eliminate_button_pressed():
-	cs_board_script_node.Eliminate()
-
-
 func restart():
-	cs_board_script_node.Generate()
-	cs_board_script_node.InitGrids()
-	for i in range(1, 10):
-		for j in range(1, 10):
-			var node = board_node.get_node("%%Grid%d" % i).get_node("%%Subgrid%d" % j)
-			node.reset_candidates()
+	cs_board_script_node.Restart()
+
+
+func execute(node, strategy):
+	match node.type:
+		GlobalScript.NodeType.Game:
+			cs_board_script_node.ExecuteStrategiesOnBoard(strategy)
+		GlobalScript.NodeType.Subgrid:
+			cs_board_script_node.ExecuteStrategiesOnSubgrid(node.idx_grid, node.idx_subgrid, strategy)
+		GlobalScript.NodeType.Digit:
+			cs_board_script_node.ExecuteStrategiesOnDigit(node.subgrid_node.idx_grid, node.subgrid_node.idx_subgrid, node.digit, strategy)

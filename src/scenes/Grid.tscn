@@ -1,20 +1,20 @@
-[gd_scene load_steps=4 format=3 uid="uid://cemewhroxy04d"]
+[gd_scene load_steps=5 format=3 uid="uid://cemewhroxy04d"]
 
 [ext_resource type="Script" path="res://scripts/Grid.gd" id="1_vdqwi"]
-[ext_resource type="PackedScene" path="res://scenes/Subgrid.tscn" id="2_8vsss"]
+[ext_resource type="StyleBox" uid="uid://ddmrgglyps6ih" path="res://styles/style_box_empty.tres" id="2_2noce"]
+[ext_resource type="PackedScene" uid="uid://cddhemmip4bvg" path="res://scenes/Subgrid.tscn" id="2_8vsss"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3oxrg"]
-bg_color = Color(1, 1, 1, 1)
-draw_center = false
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_25i6v"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
 border_color = Color(0, 0, 0, 1)
-expand_margin_left = 1.0
-expand_margin_top = 1.0
-expand_margin_right = 1.0
-expand_margin_bottom = 1.0
 
 [node name="Grid" type="Control"]
 layout_mode = 3
@@ -26,6 +26,26 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_vdqwi")
+
+[node name="Border" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_25i6v")
+
+[node name="Bg" type="Panel" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = ExtResource("2_2noce")
 
 [node name="Subgrids" type="GridContainer" parent="."]
 layout_mode = 1
@@ -73,13 +93,3 @@ layout_mode = 2
 [node name="Subgrid9" parent="Subgrids" instance=ExtResource("2_8vsss")]
 unique_name_in_owner = true
 layout_mode = 2
-
-[node name="Panel" type="Panel" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_3oxrg")

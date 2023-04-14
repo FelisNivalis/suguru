@@ -1,6 +1,4 @@
 extends Node
 
-
-func idx_to_xy(i, j):
-	return [i / 3 * 3 + j / 3,
-			i % 3 * 3 + j % 3]
+var dispatcher_script = preload("res://scripts/Dispatcher.gd")
+enum NodeType {Game = 0, Grid = 1, Subgrid = 2, Digit = 3}

@@ -1,27 +1,21 @@
-[gd_scene load_steps=7 format=3 uid="uid://pvvqtp85di3w"]
+[gd_scene load_steps=8 format=3 uid="uid://pvvqtp85di3w"]
 
 [ext_resource type="Script" path="res://scripts/MainGame.gd" id="1_3cs3r"]
 [ext_resource type="PackedScene" uid="uid://cemewhroxy04d" path="res://scenes/Grid.tscn" id="2"]
+[ext_resource type="Script" path="res://scripts/ClassicSudokuScriptNode.cs" id="3_sj38m"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a7wwk"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o1c8i"]
-content_margin_left = 0.0
-content_margin_top = 0.0
-content_margin_right = 0.0
-content_margin_bottom = 0.0
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_77mmc"]
 bg_color = Color(1, 1, 1, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_23jvl"]
+bg_color = Color(1, 1, 1, 1)
 corner_radius_top_left = 15
 corner_radius_top_right = 15
 corner_radius_bottom_right = 15
 corner_radius_bottom_left = 15
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yuees"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
 draw_center = false
 border_width_left = 2
 border_width_top = 2
@@ -32,10 +26,14 @@ corner_radius_top_left = 15
 corner_radius_top_right = 15
 corner_radius_bottom_right = 15
 corner_radius_bottom_left = 15
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aqsee"]
 
-[node name="Control" type="Control"]
+[node name="MainGame" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -56,79 +54,82 @@ theme_override_constants/separation = 1
 [node name="Left" type="PanelContainer" parent="HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_a7wwk")
+theme_override_styles/panel = SubResource("StyleBoxFlat_77mmc")
 
-[node name="Control" type="Control" parent="HSplitContainer/Left"]
+[node name="BoardSizeControl" type="Control" parent="HSplitContainer/Left"]
+custom_minimum_size = Vector2(540, 540)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="MarginContainer" type="Control" parent="HSplitContainer/Left/Control"]
+[node name="MarginContainer" type="MarginContainer" parent="HSplitContainer/Left/BoardSizeControl"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -270.0
-offset_top = -270.0
-offset_right = 270.0
-offset_bottom = 270.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
 
-[node name="PanelContainer" type="PanelContainer" parent="HSplitContainer/Left/Control/MarginContainer"]
+[node name="Clipper" type="PanelContainer" parent="HSplitContainer/Left/BoardSizeControl/MarginContainer"]
 clip_children = 1
+clip_contents = true
 layout_mode = 2
-offset_right = 540.0
-offset_bottom = 540.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_o1c8i")
+theme_override_styles/panel = SubResource("StyleBoxFlat_23jvl")
 
-[node name="Board" type="GridContainer" parent="HSplitContainer/Left/Control/MarginContainer/PanelContainer"]
+[node name="Board" type="GridContainer" parent="HSplitContainer/Left/BoardSizeControl/MarginContainer/Clipper"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 0
 theme_override_constants/v_separation = 0
 columns = 3
 
-[node name="Grid1" parent="HSplitContainer/Left/Control/MarginContainer/PanelContainer/Board" instance=ExtResource("2")]
+[node name="Grid1" parent="HSplitContainer/Left/BoardSizeControl/MarginContainer/Clipper/Board" instance=ExtResource("2")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Grid2" parent="HSplitContainer/Left/Control/MarginContainer/PanelContainer/Board" instance=ExtResource("2")]
+[node name="Grid2" parent="HSplitContainer/Left/BoardSizeControl/MarginContainer/Clipper/Board" instance=ExtResource("2")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Grid3" parent="HSplitContainer/Left/Control/MarginContainer/PanelContainer/Board" instance=ExtResource("2")]
+[node name="Grid3" parent="HSplitContainer/Left/BoardSizeControl/MarginContainer/Clipper/Board" instance=ExtResource("2")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Grid4" parent="HSplitContainer/Left/Control/MarginContainer/PanelContainer/Board" instance=ExtResource("2")]
+[node name="Grid4" parent="HSplitContainer/Left/BoardSizeControl/MarginContainer/Clipper/Board" instance=ExtResource("2")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Grid5" parent="HSplitContainer/Left/Control/MarginContainer/PanelContainer/Board" instance=ExtResource("2")]
+[node name="Grid5" parent="HSplitContainer/Left/BoardSizeControl/MarginContainer/Clipper/Board" instance=ExtResource("2")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Grid6" parent="HSplitContainer/Left/Control/MarginContainer/PanelContainer/Board" instance=ExtResource("2")]
+[node name="Grid6" parent="HSplitContainer/Left/BoardSizeControl/MarginContainer/Clipper/Board" instance=ExtResource("2")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Grid7" parent="HSplitContainer/Left/Control/MarginContainer/PanelContainer/Board" instance=ExtResource("2")]
+[node name="Grid7" parent="HSplitContainer/Left/BoardSizeControl/MarginContainer/Clipper/Board" instance=ExtResource("2")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Grid8" parent="HSplitContainer/Left/Control/MarginContainer/PanelContainer/Board" instance=ExtResource("2")]
+[node name="Grid8" parent="HSplitContainer/Left/BoardSizeControl/MarginContainer/Clipper/Board" instance=ExtResource("2")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Grid9" parent="HSplitContainer/Left/Control/MarginContainer/PanelContainer/Board" instance=ExtResource("2")]
+[node name="Grid9" parent="HSplitContainer/Left/BoardSizeControl/MarginContainer/Clipper/Board" instance=ExtResource("2")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Panel" type="Panel" parent="HSplitContainer/Left/Control/MarginContainer"]
-layout_mode = 2
-offset_right = 540.0
-offset_bottom = 540.0
+[node name="BoardBorder" type="Panel" parent="HSplitContainer/Left/BoardSizeControl"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_yuees")
 
@@ -161,5 +162,12 @@ text = "Restart"
 layout_mode = 2
 text = "Resolve"
 
-[connection signal="pressed" from="HSplitContainer/Menu/MarginContainer/VBoxContainer/RestartButton" to="." method="restart"]
-[connection signal="pressed" from="HSplitContainer/Menu/MarginContainer/VBoxContainer/EliminateButton" to="." method="_on_eliminate_button_pressed"]
+[node name="CSScript" type="Control" parent="."]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("3_sj38m")
+
+[connection signal="pressed" from="HSplitContainer/Menu/MarginContainer/VBoxContainer/RestartButton" to="CSScript" method="Restart"]
+[connection signal="pressed" from="HSplitContainer/Menu/MarginContainer/VBoxContainer/EliminateButton" to="CSScript" method="Eliminate"]

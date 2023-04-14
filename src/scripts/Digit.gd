@@ -23,7 +23,6 @@ func _on_click_digit(event):
 	if event is InputEventMouseButton:
 		if event.is_pressed():
 			if event.button_index == MOUSE_BUTTON_RIGHT:
-				print_debug("clicked on candidate ", digit)
 				if content_node.visible:
 					maingame_node.execute(self, "eliminate_candidate")
 				else:

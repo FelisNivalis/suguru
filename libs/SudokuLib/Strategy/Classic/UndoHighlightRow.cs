@@ -11,12 +11,12 @@ namespace SudokuLib.Strategy.Classic
     {
         override public IEnumerable<Op.OpBase> ExecuteOnSubgrid(ClassicSudoku game, int row, int column)
         {
-            return from i in Enumerable.Range(0, 9) select new Op.SubgridDeselectOp(row, i) as Op.OpBase;
+            return from i in Enumerable.Range(0, 9) select new Op.SubgridUnselectOp(row, i) as Op.OpBase;
         }
 
         override public IEnumerable<Op.OpBase> ExecuteOnBoard(ClassicSudoku game)
         {
-            return from row in Enumerable.Range(0, 9) from column in Enumerable.Range(0, 9) select new Op.SubgridDeselectOp(row, column) as Op.OpBase;
+            return from row in Enumerable.Range(0, 9) from column in Enumerable.Range(0, 9) select new Op.SubgridUnselectOp(row, column) as Op.OpBase;
         }
     }
 }

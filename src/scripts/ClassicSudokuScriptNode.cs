@@ -18,11 +18,15 @@ public partial class ClassicSudokuScriptNode: Node
             HighlightColumn.Instance.ExecuteOnSubgrid,
             HighlightRow.Instance.ExecuteOnSubgrid,
         } },
-        { "deselect_subgrid", new Func<ClassicSudoku, int, int, IEnumerable<OpBase>>[]
+        { "unselect_subgrid", new Func<ClassicSudoku, int, int, IEnumerable<OpBase>>[]
         {
             UndoHighlightSameDigit.Instance.ExecuteOnSubgrid,
             UndoHighlightColumn.Instance.ExecuteOnSubgrid,
             UndoHighlightRow.Instance.ExecuteOnSubgrid,
+        } },
+        { "unfill_subgrid", new Func<ClassicSudoku, int, int, IEnumerable<OpBase>>[]
+        {
+            UnfillDigit.Instance.ExecuteOnSubgrid,
         } },
     };
     private Dictionary<string, Func<ClassicSudoku, int, int, int, IEnumerable<OpBase>>[]> strategyOnDigitPresets = new()

@@ -20,13 +20,16 @@ func _ready():
 func _on_click_answer(event):
 	if event is InputEventMouseButton:
 		if event.is_pressed():
-			#if event.button_index == MOUSE_BUTTON_RIGHT:
-			#	# redo
-			#	accept_event()
-			#	return
+			if event.button_index == MOUSE_BUTTON_RIGHT:
+				if maingame_node.selected_node == self:
+					maingame_node.execute(maingame_node.selected_node, "unselect_subgrid")
+					maingame_node.selected_node = null
+				maingame_node.execute(self, "unfill_subgrid")
+				accept_event()
+				return
 			if event.button_index == MOUSE_BUTTON_LEFT:
 				if maingame_node.selected_node:
-					maingame_node.execute(maingame_node.selected_node, "deselect_subgrid")
+					maingame_node.execute(maingame_node.selected_node, "unselect_subgrid")
 				maingame_node.execute(self, "select_subgrid")
 				maingame_node.selected_node = self
 				accept_event()
@@ -38,11 +41,9 @@ func _on_click_answer(event):
 func fill_with(num):
 	if num > 0:
 		candidates_node.visible = false
-		answer_node.visible = true
 		answer_label_node.text = str(num)
-		if GlobalSettings.show_errors and not maingame_node.cs_board_script_node.CheckCorrect(idx_grid, idx_subgrid, num):
-			answer_label_node.add_theme_color_override("font_color", Color(1, 0, 0))
+		answer_node.visible = true
 	else:
-		candidates_node.visible = true
 		answer_node.visible = false
 		answer_label_node.text = ""
+		candidates_node.visible = true

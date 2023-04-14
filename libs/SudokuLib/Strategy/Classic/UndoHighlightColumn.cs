@@ -11,7 +11,7 @@ namespace SudokuLib.Strategy.Classic
     {
         override public IEnumerable<Op.OpBase> ExecuteOnSubgrid(ClassicSudoku game, int row, int column)
         {
-            return from i in Enumerable.Range(0, 9) select new Op.SubgridDeselectOp(i, column) as Op.OpBase;
+            return from i in Enumerable.Range(0, 9) select new Op.SubgridUnselectOp(i, column) as Op.OpBase;
         }
 
     }

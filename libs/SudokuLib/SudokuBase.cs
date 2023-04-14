@@ -3,6 +3,7 @@ namespace SudokuLib
     public abstract class SudokuBase
     {
         public int[,] board = new int[9, 9];
+        public int[,] init_board = new int[9, 9];
         public int[,] answer = new int[9, 9];
         public int[,,] candidates = new int[9, 9, 9];
         protected int seed = -1;
@@ -11,6 +12,7 @@ namespace SudokuLib
         public SudokuBase(SudokuBase other)
         {
             board = other.board.Clone() as int[,];
+            init_board = other.init_board.Clone() as int[,];
             answer = other.answer.Clone() as int[,];
             candidates = other.candidates.Clone() as int[,,];
             rand = other.rand;
@@ -55,6 +57,7 @@ namespace SudokuLib
                 }
                 if (!flag) break;
             }
+            init_board = board.Clone() as int[,];
         }
 
         protected void Clear()
@@ -128,16 +131,6 @@ namespace SudokuLib
                 if (v[i])
                     yield return i;
             }
-        }
-
-        public IEnumerable<int> EnumerateInvalid(int[,] board, int x, int y)
-        {
-            // Get all valid numbers
-            bool[] v;
-            GetValid(board, x, y, out v);
-            foreach (int i in Enumerable.Range(1, 9))
-                if (!v[i])
-                    yield return i;
         }
 
         abstract protected void GetValid(in int[,] board, int x, int y, out bool[] v);

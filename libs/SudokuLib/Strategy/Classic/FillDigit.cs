@@ -11,7 +11,11 @@ namespace SudokuLib.Strategy.Classic
     {
         override public IEnumerable<OpBase> ExecuteOnDigit(ClassicSudoku game, int row, int column, int digit)
         {
-            return new OpBase[] { new FillOp(row, column, digit) };
+            OpBase fillOp = new FillOp(row, column, digit);
+            if (digit == 0) return new OpBase[] { fillOp };
+
+            OpBase hlOp = digit == game.answer[row, column] ? new SubgridHLDefaultOp(row, column) : new SubgridHLErrorOp(row, column);
+            return new OpBase[] { fillOp, hlOp };
         }
     }
 }

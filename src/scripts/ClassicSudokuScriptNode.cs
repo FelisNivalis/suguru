@@ -4,37 +4,33 @@ using System.Linq;
 using Godot;
 using Sudoku.Executors;
 using SudokuLib;
+using SudokuLib.Strategy;
 using SudokuLib.Strategy.Classic;
 using SudokuLib.Strategy.Op;
 
 public partial class ClassicSudokuScriptNode: Node
 {
-    public ClassicSudoku sudoku = new ClassicSudoku(42);
+    public ClassicSudoku sudoku = new ClassicSudoku(-1);
     private Dictionary<string, Func<ClassicSudoku, int, int, OpList>[]> strategyOnSubgridPresets = new()
     {
         { "select_subgrid", new Func<ClassicSudoku, int, int, OpList>[]
         {
-            HighlightSameDigit.Instance.ExecuteOnSubgrid,
-            HighlightColumn.Instance.ExecuteOnSubgrid,
-            HighlightRow.Instance.ExecuteOnSubgrid,
+            UISelectSubgrid.Instance.ExecuteOnSubgrid,
         } },
         { "unselect_subgrid", new Func<ClassicSudoku, int, int, OpList>[]
         {
-            UndoHighlightSameDigit.Instance.ExecuteOnSubgrid,
-            UndoHighlightColumn.Instance.ExecuteOnSubgrid,
-            UndoHighlightRow.Instance.ExecuteOnSubgrid,
+            UIUnselectSubgrid.Instance.ExecuteOnSubgrid,
         } },
         { "unfill_subgrid", new Func<ClassicSudoku, int, int, OpList>[]
         {
-            UnfillDigit.Instance.ExecuteOnSubgrid,
+            UIUnfillSubgrid.Instance.ExecuteOnSubgrid,
         } },
     };
     private Dictionary<string, Func<ClassicSudoku, int, int, int, OpList>[]> strategyOnDigitPresets = new()
     {
         { "fill_with", new Func<ClassicSudoku, int, int, int, OpList>[]
         {
-            FillDigit.Instance.ExecuteOnDigit,
-            BasicEliminate.Instance.ExecuteOnDigit,
+            UIFillDigit.Instance.ExecuteOnDigit,
         } },
         { "eliminate_candidate", new Func<ClassicSudoku, int, int, int, OpList>[]
         {

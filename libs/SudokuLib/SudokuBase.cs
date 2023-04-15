@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace SudokuLib
 {
     public abstract class SudokuBase
@@ -8,6 +10,7 @@ namespace SudokuLib
         public bool[,,] candidates = new bool[9, 9, 10];
         protected int seed = -1;
         protected Random rand;
+        private const int MAX_TRIES = 1000000;
 
         public SudokuBase(SudokuBase other)
         {
@@ -29,7 +32,7 @@ namespace SudokuLib
         {
             Clear();
             int[,]? _answer;
-            Solve(out _answer, ref board, out _);
+            while (!Solve(out _answer, ref board, out _));
             if (_answer == null) return;
             answer = _answer;
             board = answer.Clone() as int[,];
@@ -46,8 +49,7 @@ namespace SudokuLib
                         continue;
                     board[x, y] = 0;
                     bool unique;
-                    Solve(out _, ref board, out unique);
-                    if (unique)
+                    if (Solve(out _, ref board, out unique) && unique)
                     {
                         flag = true;
                         break;
@@ -69,31 +71,120 @@ namespace SudokuLib
 
         protected bool Solve(out int[,]? answer, ref int[,] board, out bool unique)
         {
+            var startTime = DateTime.Now;
+            int nTries = 0;
+            int[,,] clues = new int[3, 10, 10];
+            for (int i = 0; i < 9; i++)
+                for (int j = 0; j < 9; j++)
+                {
+                    int candidate = board[i, j];
+                    if (candidate == 0)
+                        continue;
+                    var idx = Common.GetIdxFromRC(i, j);
+                    clues[0, i, candidate]++;
+                    clues[1, j, candidate]++;
+                    clues[2, idx.Item1, candidate]++;
+                }
+            /*for (int i = 0; i < 9; i++)
+            {
+                String s = "";
+                for (int j = 0; j < 9; j++)
+                {
+                    s += board[i, j].ToString();
+                }
+                Debug.Print(s);
+            }*/
+            answer = board.Clone() as int[,];
+            int level = 0;
+            while (level < 9 * 9 && board[level / 9, level % 9] > 0) level++;
+            int nSolution = 0;
+            LinkedList<int[]> candidatesList = new();
+            candidatesList.AddLast(Enumerable.Range(0, 10).ToArray());
+            while (nTries++ < MAX_TRIES)
+            {
+                int r = level / 9;
+                int c = level % 9;
+                var idx = Common.GetIdxFromRC(r, c);
+                var candidates = candidatesList.Last();
+                if (candidates[0] > 0)
+                {
+                    int candidate = candidates[candidates[0]];
+                    clues[0, r, candidate]--;
+                    clues[1, c, candidate]--;
+                    clues[2, idx.Item1, candidate]--;
+                }
+                while (candidates[0]++ < 9)
+                {
+                    int cur = candidates[0];
+                    int rIdx = rand.Next(candidates[0], 10);
+                    int candidate = candidates[rIdx];
+                    candidates[rIdx] = candidates[cur];
+                    candidates[cur] = candidate;
+                    if (clues[0, r, candidate] == 0 && clues[1, c, candidate] == 0 && clues[2, idx.Item1, candidate] == 0)
+                        break;
+                }
+                
+                if (candidates[0] <= 9)
+                {
+                    int candidate = candidates[candidates[0]];
+                    answer[r, c] = candidate;
+                    clues[0, r, candidate]++;
+                    clues[1, c, candidate]++;
+                    clues[2, idx.Item1, candidate]++;
+                    //Debug.Print(String.Format("Search level={0}, candidateIdx={1}", level, candidates[0]));
+                    while (++level < 9 * 9 && board[level / 9, level % 9] > 0) ;
+                    candidatesList.AddLast(Enumerable.Range(0, 10).ToArray());
+                    if (level == 9 * 9)
+                    {
+                        nSolution++;
+                        if (nSolution > 1)
+                            break;
+                    }
+                }
+                if (candidates[0] > 9 || level == 9 * 9)
+                {
+                    //Debug.Print(String.Format("Backtracking level={0}", level));
+                    candidatesList.RemoveLast();
+                    while (--level >= 0 && board[level / 9, level % 9] > 0) ;
+                    if (level < 0) break;
+                }
+            }
+            unique = nSolution == 1;
+            bool ret = nSolution > 0;
+            //bool ret = _Solve(out answer, ref board, out unique, 0, ref nTries, ref clues);
+            Debug.Print(String.Format("{0}:{1}:solved={2}:unique={3}", (DateTime.Now - startTime).TotalSeconds, nTries, ret, unique));
+            return ret;
+        }
+
+        protected bool _Solve(out int[,]? answer, ref int[,] board, out bool unique, int level, ref int nTries, ref int[,,] clues)
+        {
             answer = null;
             unique = true;
-            // Find the first unfilled grid.
-            int i, j = 0;
-            for (i = 0; i < 9; i++)
-            {
-                for (j = 0; j < 9; j++)
-                    if (board[i, j] == 0)
-                        break;
-                if (j < 9 && board[i, j] == 0)
-                    break;
-            }
-            if (i == 9)
+            // Get current subgrid.
+            if (level == 81)
             {
                 answer = board.Clone() as int[,];
                 return true;
             }
+            int i = level / 9;
+            int j = level % 9;
+            if (board[i, j] > 0) return _Solve(out answer, ref board, out unique, level + 1, ref nTries, ref clues);
+            var idx = Common.GetIdxFromRC(i, j);
             // Search
             int nSolution = 0;
-            foreach (int candidate in EnumerateValid(board, i, j))
+            int[] order = Enumerable.Range(1, 9).ToArray();
+            Shuffle(ref order);
+            foreach (int candidate in order)
             {
+                if (clues[0, i, candidate] > 0 || clues[1, j, candidate] > 0 || clues[2, idx.Item1, candidate] > 0)
+                    continue;
                 board[i, j] = candidate;
+                clues[0, i, candidate]++;
+                clues[1, j, candidate]++;
+                clues[2, idx.Item1, candidate]++;
                 bool _unique;
                 int[,]? _answer;
-                if (Solve(out _answer, ref board, out _unique))
+                if (++nTries < MAX_TRIES && _Solve(out _answer, ref board, out _unique, level + 1, ref nTries, ref clues))
                 {
                     answer = _answer;
                     nSolution++;
@@ -101,6 +192,10 @@ namespace SudokuLib
                         nSolution++;
                 }
                 board[i, j] = 0;
+                clues[0, i, candidate]--;
+                clues[1, j, candidate]--;
+                clues[2, idx.Item1, candidate]--;
+                if (nTries >= MAX_TRIES) return false;
                 if (nSolution > 1) break;
             }
             unique = nSolution == 1;

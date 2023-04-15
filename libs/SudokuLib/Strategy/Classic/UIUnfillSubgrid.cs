@@ -2,7 +2,7 @@
 
 namespace SudokuLib.Strategy.Classic
 {
-    public class UnfillDigit : Strategy<ClassicSudoku, UnfillDigit>
+    public class UIUnfillSubgrid : Strategy<ClassicSudoku, UIUnfillSubgrid>
     {
         override public OpList ExecuteOnSubgrid(ClassicSudoku game, int row, int column)
         {

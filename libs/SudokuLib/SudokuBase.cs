@@ -76,28 +76,6 @@ namespace SudokuLib
             //rand = seed < 0 ? new Random() : new Random(seed);
         }
 
-        protected bool Solve(out int[,]? answer, ref int[,] board, out bool unique)
-        {
-            var startTime = DateTime.Now;
-            int nTries = 0;
-            int[,,] clues = new int[3, 10, 10];
-            for (int i = 0; i < 9; i++)
-                for (int j = 0; j < 9; j++)
-                {
-                    int candidate = board[i, j];
-                    if (candidate == 0)
-                        continue;
-                    var idx = Common.GetIdxFromRC(i, j);
-                    clues[0, i, candidate]++;
-                    clues[1, j, candidate]++;
-                    clues[2, idx.Item1, candidate]++;
-                }
-            double timeCount = 0;
-            bool ret = _Solve(out answer, ref board, out unique, ref nTries, ref clues, ref timeCount);
-            if (nTries > 1000) Debug.Print(String.Format("{0}:sortTime={4}:{1}:solved={2}:unique={3}", (DateTime.Now - startTime).TotalNanoseconds / nTries, nTries, ret, unique, timeCount / nTries));
-            return ret;
-        }
-
         struct StackInfo
         {
             public int idx = 0;
@@ -263,88 +241,6 @@ namespace SudokuLib
             return nSolution >= nSolutionsToFind;
         }
 
-        protected bool _Solve(out int[,]? answer, ref int[,] board, out bool unique, ref int nTries, ref int[,,] clues, ref double timeCount)
-        {
-            answer = null;
-            unique = true;
-            // Get current subgrid.
-            int r, c;
-            r = c = 0;
-            (int, int) idx;
-            int[] order = Enumerable.Range(1, 9).ToArray();
-            Shuffle(ref order);
-            // Find a subgrid with least possible clues
-            int minNV = 10;
-            var startTime = DateTime.Now;
-            for (int i = 0; i < 9; i++)
-                for (int j = 0; j < 9; j++)
-                    if (board[i, j] == 0)
-                    {
-                        int nV = 0;
-                        idx = Common.GetIdxFromRC(i, j);
-                        int cand = 0;
-                        for (int d = 1; d <= 9; d++)
-                            if (clues[0, i, d] == 0 && clues[1, j, d] == 0 && clues[2, idx.Item1, d] == 0)
-                            {
-                                nV++;
-                                cand = d;
-                            }
-                        // No solutions
-                        if (nV == 0)
-                        {
-                            timeCount += (DateTime.Now - startTime).TotalNanoseconds;
-                            return false;
-                        }
-                        if (nV < minNV)
-                        {
-                            minNV = nV;
-                            r = i;
-                            c = j;
-                            if (nV == 1)
-                            {
-                                order = new[] { cand };
-                                goto L1;
-                            }
-                        }
-                    }
-            L1:
-            timeCount += (DateTime.Now - startTime).TotalNanoseconds;
-            if (minNV == 10)
-            {
-                answer = board.Clone() as int[,];
-                return true;
-            }
-            idx = Common.GetIdxFromRC(r, c);
-            // Search
-            int nSolution = 0;
-            foreach (int candidate in order)
-            {
-                if (clues[0, r, candidate] > 0 || clues[1, c, candidate] > 0 || clues[2, idx.Item1, candidate] > 0)
-                    continue;
-                board[r, c] = candidate;
-                clues[0, r, candidate]++;
-                clues[1, c, candidate]++;
-                clues[2, idx.Item1, candidate]++;
-                bool _unique;
-                int[,]? _answer;
-                if (++nTries < MAX_TRIES && _Solve(out _answer, ref board, out _unique, ref nTries, ref clues, ref timeCount))
-                {
-                    answer = _answer;
-                    nSolution++;
-                    if (!_unique)
-                        nSolution++;
-                }
-                board[r, c] = 0;
-                clues[0, r, candidate]--;
-                clues[1, c, candidate]--;
-                clues[2, idx.Item1, candidate]--;
-                if (nTries >= MAX_TRIES) return false;
-                if (nSolution > 1) break;
-            }
-            unique = nSolution == 1;
-            return nSolution > 0;
-        }
-
         protected void Shuffle(ref int[] l)
         {
             for (int i = 0; i < l.Length; i++)
@@ -355,22 +251,5 @@ namespace SudokuLib
                 l[j] = tmp;
             }
         }
-
-        protected IEnumerable<int> EnumerateValid(int[,] board, int x, int y)
-        {
-            // Shuffle 1-9
-            int[] order = Enumerable.Range(1, 9).ToArray();
-            Shuffle(ref order);
-            // Get all valid numbers
-            bool[] v;
-            GetValid(board, x, y, out v);
-            foreach (int i in order)
-            {
-                if (v[i])
-                    yield return i;
-            }
-        }
-
-        abstract protected void GetValid(in int[,] board, int x, int y, out bool[] v);
     }
 }

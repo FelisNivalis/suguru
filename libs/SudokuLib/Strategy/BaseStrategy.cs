@@ -43,9 +43,7 @@ namespace SudokuLib.Strategy
         }
     }
 
-    public class SingleDigitOpStrategyBase<G> : Strategy<G, SingleDigitOpStrategyBase<G>> where G : SudokuBase
-    {
-    }
+    public class SingleDigitOpStrategyBase<G> : Strategy<G, SingleDigitOpStrategyBase<G>> where G : SudokuBase { }
 
     public class SingleDigitOpStrategy<OP, G> : SingleDigitOpStrategyBase<G> where OP : DigitOpBase, new() where G : SudokuBase
     {

@@ -22,24 +22,24 @@ namespace SudokuLib
             static Candidates()
             {
                 for (int i = 1; i <= 9; i++)
-                    uniqueCandidate[1 << i - 1] = i;
+                    uniqueCandidate[(1 << 9) - 1 - (1 << i - 1)] = i;
             }
             public Candidates() { }
             public Candidates(Candidates c)
             {
                 candidates = c.candidates.Clone() as int[,];
             }
-            public bool Get(int r, int c, int d)
+            public bool CheckValid(int r, int c, int d)
             {
-                return (candidates[r, c] & (1 << d - 1)) > 0;
+                return (candidates[r, c] & (1 << d - 1)) == 0;
             }
-            public bool Set(int r, int c, int d)
+            public bool Eliminate(int r, int c, int d)
             {
                 bool ret = (candidates[r, c] & (1 << d - 1)) > 0;
                 candidates[r, c] |= 1 << d - 1;
                 return ret;
             }
-            public bool Unset(int r, int c, int d)
+            public bool Uneliminate(int r, int c, int d)
             {
                 bool ret = (candidates[r, c] & (1 << d - 1)) > 0;
                 candidates[r, c] &= (1 << 9) - 1 - (1 << d - 1);
@@ -65,6 +65,12 @@ namespace SudokuLib
         {
             this.seed = seed;
             rand = new Random();
+        }
+
+        public bool Solved()
+        {
+            for (int r = 0; r < 9; r++) for (int c = 0; c < 9; c++) if (board[r, c] == 0) return false;
+            return true;
         }
 
         public void Generate()
@@ -109,6 +115,8 @@ namespace SudokuLib
         {
             board = new int[9, 9];
             answer = new int[9, 9];
+            init_board = new int[9, 9];
+            candidates = new ();
             //rand = seed < 0 ? new Random() : new Random(seed);
         }
 

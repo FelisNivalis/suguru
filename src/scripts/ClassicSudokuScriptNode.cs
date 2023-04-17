@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Godot;
 using Sudoku.Executors;
@@ -19,6 +20,7 @@ public partial class ClassicSudokuScriptNode: Node
         { "fill_with", UIFillDigit.Instance },
         { "execute_naked_single", NakedSingle.Instance },
         { "execute_hidden_single", HiddenSingle.Instance },
+        { "execute_locked_candidates_type1", LockedCandidatesType1.Instance },
         { "eliminate_candidate", SingleDigitOpStrategy<DigitOp<EliminateOp>, ClassicSudoku>.Instance },
         { "uneliminate_candidate", SingleDigitOpStrategy<DigitOp<UnEliminateOp>, ClassicSudoku>.Instance },
         { "restart", RestartAction.Instance },
@@ -31,8 +33,23 @@ public partial class ClassicSudokuScriptNode: Node
     public void Eliminate() => BasicEliminate.Instance.ExecuteOnEverySubgridDigit(sudoku);
     public void Restart()
     {
-        sudoku.Generate();
-        ExecuteStrategiesOnBoard("restart");
+        while (true)
+        {
+            sudoku.Generate();
+            ExecuteStrategiesOnBoard("restart");
+            while (true)
+            {
+                bool flag = false;
+                foreach(var strategy in new BaseStrategy<ClassicSudoku>[]{ NakedSingle.Instance, HiddenSingle.Instance, LockedCandidatesType1.Instance })
+                {
+                    var ops = strategy.ExecuteOnBoard(sudoku);
+                    Debug.Print(String.Format("strategy {0}", strategy.GetType().FullName));
+                    if (ops.Execute(this)) { flag = true; }
+                }
+                if (!flag) break;
+            }
+            if (!sudoku.Solved()) break;
+        }
     }
 
     public bool CheckCorrect(int idx_grid, int idx_subgrid, int digit)

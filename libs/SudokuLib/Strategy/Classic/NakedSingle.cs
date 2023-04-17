@@ -11,10 +11,10 @@ namespace SudokuLib.Strategy.Classic
     {
         public override OpBase ExecuteOnSubgrid(ClassicSudoku game, int row, int column)
         {
-            if (game.board[row, column] != 0) return new OpList();
+            if (game.board[row, column] != 0) return new EmptyOp();
             var candidate = game.candidates.UniqueCandidate(row, column);
             if (candidate > 0) return UIFillDigit.Instance.ExecuteOnDigit(game, row, column, candidate);
-            return new OpList();
+            return new EmptyOp();
         }
 
         public override OpBase ExecuteOnBoard(ClassicSudoku game)

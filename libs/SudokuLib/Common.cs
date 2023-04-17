@@ -20,5 +20,16 @@ namespace SudokuLib
             j--;
             return (i / 3 * 3 + j / 3, i % 3 * 3 + j % 3);
         }
+
+        static public void DebugPrintBoard(in int[,] board)
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                String s = "";
+                for (int j = 0; j < 9; j++)
+                    s += board[i, j].ToString();
+                Debug.Print(s);
+            }
+        }
     }
 }

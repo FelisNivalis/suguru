@@ -170,6 +170,10 @@ text = "Naked Single"
 layout_mode = 2
 text = "Hidden Single"
 
+[node name="LockedCandidatesButton" type="Button" parent="HSplitContainer/Menu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Locked Candidates"
+
 [node name="CSScript" type="Control" parent="."]
 unique_name_in_owner = true
 anchors_preset = 0
@@ -180,3 +184,4 @@ script = ExtResource("3_sj38m")
 [connection signal="pressed" from="HSplitContainer/Menu/MarginContainer/VBoxContainer/RestartButton" to="CSScript" method="Restart"]
 [connection signal="pressed" from="HSplitContainer/Menu/MarginContainer/VBoxContainer/NakedSingleButton" to="." method="execute_on_board" binds= ["execute_naked_single"]]
 [connection signal="pressed" from="HSplitContainer/Menu/MarginContainer/VBoxContainer/HiddenSingleButton" to="." method="execute_on_board" binds= ["execute_hidden_single"]]
+[connection signal="pressed" from="HSplitContainer/Menu/MarginContainer/VBoxContainer/LockedCandidatesButton" to="." method="execute_on_board" binds= ["execute_locked_candidates_type1"]]

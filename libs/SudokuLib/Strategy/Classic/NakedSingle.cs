@@ -16,5 +16,10 @@ namespace SudokuLib.Strategy.Classic
             if (candidate > 0) return UIFillDigit.Instance.ExecuteOnDigit(game, row, column, candidate);
             return new OpList();
         }
+
+        public override OpBase ExecuteOnBoard(ClassicSudoku game)
+        {
+            return ExecuteOnEverySubgrid(game);
+        }
     }
 }

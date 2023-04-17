@@ -12,7 +12,7 @@ namespace SudokuLib.Strategy.Classic
     {
         override public OpBase ExecuteOnSubgrid(ClassicSudoku game, int row, int column)
         {
-            return new OpList(from i in Enumerable.Range(0, 9) select new SubgridUnselectOp(i, column) as OpBase);
+            return new OpList(from i in Enumerable.Range(0, 9) select new SubgridOp<SubgridUnselectOp>(i, column) as OpBase);
         }
 
     }

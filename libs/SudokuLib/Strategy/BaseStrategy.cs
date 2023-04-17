@@ -2,12 +2,12 @@
 
 namespace SudokuLib.Strategy
 {
-    public abstract class Singleton<T> where T : class, new()
+    public abstract class Strategy<G, T> : BaseStrategy<G> where G : SudokuBase where T : class, new()
     {
         public static readonly T Instance = new();
     }
 
-    public class Strategy<G, T> : Singleton<T> where G : SudokuBase where T : class, new()
+    public class BaseStrategy<G> where G : SudokuBase
     {
         virtual public OpBase ExecuteOnSubgrid(G game, int row, int column)
         {
@@ -40,6 +40,18 @@ namespace SudokuLib.Strategy
                 from c in Enumerable.Range(0, 9)
                 select ExecuteOnDigit(game, r, c, game.board[r, c])
             );
+        }
+    }
+
+    public class SingleDigitOpStrategyBase<G> : Strategy<G, SingleDigitOpStrategyBase<G>> where G : SudokuBase
+    {
+    }
+
+    public class SingleDigitOpStrategy<OP, G> : SingleDigitOpStrategyBase<G> where OP : DigitOpBase, new() where G : SudokuBase
+    {
+        public override OpBase ExecuteOnDigit(G game, int row, int column, int digit)
+        {
+            return new OP() with { Row = row, Column = column, Digit = digit };
         }
     }
 }

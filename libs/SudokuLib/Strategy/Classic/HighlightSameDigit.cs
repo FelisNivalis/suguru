@@ -15,7 +15,7 @@ namespace SudokuLib.Strategy.Classic
             return new OpList(
                 from i in Enumerable.Range(0, 9)
                 from j in Enumerable.Range(0, 9)
-                select new Op.DigitSelectOp(i, j, digit) as OpBase
+                select new DigitOp<DigitSelectOp>(i, j, digit) as OpBase
             );
         }
 

@@ -11,6 +11,17 @@ using SudokuLib.Strategy.Op;
 public partial class ClassicSudokuScriptNode: Node
 {
     public ClassicSudoku sudoku = new ClassicSudoku(-1);
+    private Dictionary<string, BaseStrategy<ClassicSudoku>> strategyPresets = new()
+    {
+        { "select_subgrid", UISelectSubgrid.Instance },
+        { "unselect_subgrid", UIUnselectSubgrid.Instance },
+        { "unfill_subgrid", UIUnfillSubgrid.Instance },
+        { "fill_with", UIFillDigit.Instance },
+        { "execute_naked_single", NakedSingle.Instance },
+        { "execute_hidden_single", HiddenSingle.Instance },
+        { "eliminate_candidate", SingleDigitOpStrategy<DigitOp<EliminateOp>, ClassicSudoku>.Instance },
+        { "uneliminate_candidate", SingleDigitOpStrategy<DigitOp<UnEliminateOp>, ClassicSudoku>.Instance },
+    };
     private Dictionary<string, Func<ClassicSudoku, int, int, OpBase>[]> strategyOnSubgridPresets = new()
     {
         { "select_subgrid", new Func<ClassicSudoku, int, int, OpBase>[]
@@ -34,11 +45,11 @@ public partial class ClassicSudokuScriptNode: Node
         } },
         { "eliminate_candidate", new Func<ClassicSudoku, int, int, int, OpBase>[]
         {
-            (_, r, c, d) => new EliminateOp(r, c, d),
+            SingleDigitOpStrategy<DigitOp<EliminateOp>, ClassicSudoku>.Instance.ExecuteOnDigit,
         } },
         { "uneliminate_candidate", new Func<ClassicSudoku, int, int, int, OpBase>[]
         {
-            (_, r, c, d) => new UnEliminateOp(r, c, d),
+            SingleDigitOpStrategy<DigitOp<UnEliminateOp>, ClassicSudoku>.Instance.ExecuteOnDigit,
         } },
     };
     private Dictionary<string, Func<ClassicSudoku, OpBase>[]> strategyOnBoardPresets = new()
@@ -51,7 +62,7 @@ public partial class ClassicSudokuScriptNode: Node
                 from r in Enumerable.Range(0, 9)
                 from c in Enumerable.Range(0, 9)
                 from d in Enumerable.Range(1, 9)
-                select new UnEliminateOp(r, c, d) as OpBase
+                select new DigitOp<UnEliminateOp>(r, c, d) as OpBase
             ),
             FillDigit.Instance.ExecuteOnEverySubgridDigit,
             BasicEliminate.Instance.ExecuteOnEverySubgridDigit,

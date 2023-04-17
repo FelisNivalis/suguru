@@ -14,7 +14,7 @@ namespace SudokuLib.Strategy.Classic
         {
             return new OpList(
                 from i in Enumerable.Range(0, 9)
-                select new SubgridUnselectOp(row, i) as OpBase
+                select new SubgridOp<SubgridUnselectOp>(row, i) as OpBase
             );
         }
 
@@ -23,7 +23,7 @@ namespace SudokuLib.Strategy.Classic
             return new OpList(
                 from row in Enumerable.Range(0, 9)
                 from column in Enumerable.Range(0, 9)
-                select new SubgridUnselectOp(row, column) as OpBase
+                select new SubgridOp<SubgridUnselectOp>(row, column) as OpBase
             );
         }
     }

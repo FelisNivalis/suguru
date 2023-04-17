@@ -16,18 +16,18 @@ namespace SudokuLib.Strategy.Classic
 
                 new OpList(
                     from i in Enumerable.Range(0, 9)
-                    select new UnEliminateOp(row, i, digit) as OpBase
+                    select new DigitOp<UnEliminateOp>(row, i, digit) as OpBase
                 ),
 
                 new OpList(
                     from i in Enumerable.Range(0, 9)
-                    select new UnEliminateOp(i, column, digit) as OpBase
+                    select new DigitOp<UnEliminateOp>(i, column, digit) as OpBase
                 ),
 
                 new OpList(
                     from i in Enumerable.Range(1, 9)
                     let rc = Common.GetRCFromIdx(idx.Item1, i)
-                    select new UnEliminateOp(rc.Item1, rc.Item2, digit) as OpBase
+                    select new DigitOp<UnEliminateOp>(rc.Item1, rc.Item2, digit) as OpBase
                 ),
 
                 new OpList(

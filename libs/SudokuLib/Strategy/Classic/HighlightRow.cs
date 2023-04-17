@@ -14,7 +14,7 @@ namespace SudokuLib.Strategy.Classic
         {
             return new OpList(
                 from i in Enumerable.Range(0, 9)
-                select new SubgridSelectOp(row, i) as OpBase
+                select new SubgridOp<SubgridSelectOp>(row, i) as OpBase
             );
         }
 

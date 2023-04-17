@@ -112,7 +112,7 @@ namespace SudokuLib
             //rand = seed < 0 ? new Random() : new Random(seed);
         }
 
-        struct StackInfo
+        class StackInfo
         {
             public int idx = 0;
             public int digit = 0;

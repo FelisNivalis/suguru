@@ -15,7 +15,7 @@ namespace SudokuLib.Strategy.Classic
             return new OpList(
                 from i in Enumerable.Range(0, 9)
                 from j in Enumerable.Range(0, 9)
-                select new DigitUnselectOp(i, j, digit) as OpBase
+                select new DigitOp<DigitUnselectOp>(i, j, digit) as OpBase
             );
         }
 
@@ -25,7 +25,7 @@ namespace SudokuLib.Strategy.Classic
                 from i in Enumerable.Range(0, 9)
                 from j in Enumerable.Range(0, 9)
                 from digit in Enumerable.Range(1, 9)
-                select new DigitUnselectOp(i, j, digit) as OpBase
+                select new DigitOp<DigitUnselectOp>(i, j, digit) as OpBase
             );
         }
     }

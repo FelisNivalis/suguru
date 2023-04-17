@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Godot;
 using Sudoku.Executors;
+using Sudoku.Strategy.Classic;
 using SudokuLib;
 using SudokuLib.Strategy;
 using SudokuLib.Strategy.Classic;
-using Sudoku.Strategy.Classic;
 using SudokuLib.Strategy.Op;
 
 public partial class ClassicSudokuScriptNode: Node
@@ -24,6 +23,9 @@ public partial class ClassicSudokuScriptNode: Node
         { "execute_locked_candidates_type1", LockedCandidatesType1.Instance },
         { "execute_locked_candidates_type2", LockedCandidatesType2.Instance },
         { "execute_locked_candidates", new StrategyList<ClassicSudoku> { LockedCandidatesType1.Instance, LockedCandidatesType2.Instance } },
+        { "execute_naked_pair", NakedPair.Instance },
+        { "execute_naked_subsets", new StrategyList<ClassicSudoku> { NakedPair.Instance, NakedTuple.Instance, NakedQuadruple.Instance } },
+        { "execute_hidden_subsets", new StrategyList<ClassicSudoku> { HiddenPair.Instance, HiddenTuple.Instance, HiddenQuadruple.Instance } },
         { "eliminate_candidate", SingleDigitOpStrategy<DigitOp<EliminateOp>, ClassicSudoku>.Instance },
         { "uneliminate_candidate", SingleDigitOpStrategy<DigitOp<UnEliminateOp>, ClassicSudoku>.Instance },
         { "restart", RestartAction.Instance },
@@ -42,7 +44,9 @@ public partial class ClassicSudokuScriptNode: Node
             ClassicSudoku _sudoku = new(sudoku);
             while ((
                 from strategy in new BaseStrategy<ClassicSudoku>[]
-                    { NakedSingle.Instance, HiddenSingle.Instance, LockedCandidatesType1.Instance }
+                    { NakedSingle.Instance, HiddenSingle.Instance, LockedCandidatesType1.Instance,
+                      NakedPair.Instance, NakedTuple.Instance, NakedQuadruple.Instance,
+                      HiddenPair.Instance, HiddenTuple.Instance, HiddenQuadruple.Instance }
                 select strategy.ExecuteOnBoard(_sudoku).Execute(_sudoku)
             ).Any(b => b)) ;
             if (!_sudoku.Solved())

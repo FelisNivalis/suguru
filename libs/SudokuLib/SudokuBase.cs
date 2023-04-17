@@ -29,6 +29,26 @@ namespace SudokuLib
             {
                 candidates = c.candidates.Clone() as int[,];
             }
+            public int GetBits(int r, int c)
+            {
+                return candidates[r, c] ^ (1 << 9) - 1;
+            }
+            public bool CheckAtMost(int r, int c, int d)
+            {
+                return (GetBits(r, c) | d) == d;
+            }
+            public bool CheckAtMost(int r, int c, in int[] ds)
+            {
+                return CheckAtMost(r, c, ds.Select(_d => 1 << _d - 1).Sum());
+            }
+            public bool CheckAny(int r, int c, int d)
+            {
+                return (GetBits(r, c) & d) != 0;
+            }
+            public bool CheckAny(int r, int c, in int[] ds)
+            {
+                return CheckAny(r, c, ds.Select(_d => 1 << _d - 1).Sum());
+            }
             public bool CheckValid(int r, int c, int d)
             {
                 return (candidates[r, c] & (1 << d - 1)) == 0;

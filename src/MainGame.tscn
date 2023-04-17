@@ -174,6 +174,14 @@ text = "Hidden Single"
 layout_mode = 2
 text = "Locked Candidates"
 
+[node name="NakedSubsetsButton" type="Button" parent="HSplitContainer/Menu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Naked Subsets"
+
+[node name="HiddenSubsetsButton" type="Button" parent="HSplitContainer/Menu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Hidden Subsets"
+
 [node name="CSScript" type="Control" parent="."]
 unique_name_in_owner = true
 anchors_preset = 0
@@ -185,3 +193,5 @@ script = ExtResource("3_sj38m")
 [connection signal="pressed" from="HSplitContainer/Menu/MarginContainer/VBoxContainer/NakedSingleButton" to="." method="execute_on_board" binds= ["execute_naked_single"]]
 [connection signal="pressed" from="HSplitContainer/Menu/MarginContainer/VBoxContainer/HiddenSingleButton" to="." method="execute_on_board" binds= ["execute_hidden_single"]]
 [connection signal="pressed" from="HSplitContainer/Menu/MarginContainer/VBoxContainer/LockedCandidatesButton" to="." method="execute_on_board" binds= ["execute_locked_candidates"]]
+[connection signal="pressed" from="HSplitContainer/Menu/MarginContainer/VBoxContainer/NakedSubsetsButton" to="." method="execute_on_board" binds= ["execute_naked_subsets"]]
+[connection signal="pressed" from="HSplitContainer/Menu/MarginContainer/VBoxContainer/HiddenSubsetsButton" to="." method="execute_on_board" binds= ["execute_hidden_subsets"]]

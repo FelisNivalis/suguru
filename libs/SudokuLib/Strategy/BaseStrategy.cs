@@ -1,6 +1,4 @@
 ﻿using System.Collections;
-using System.Data.Common;
-using System.Diagnostics;
 using SudokuLib.Strategy.Op;
 
 namespace SudokuLib.Strategy

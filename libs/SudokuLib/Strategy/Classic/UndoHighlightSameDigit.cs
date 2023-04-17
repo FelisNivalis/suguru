@@ -9,7 +9,7 @@ namespace SudokuLib.Strategy.Classic
 {
     public class UndoHighlightSameDigit : Strategy<ClassicSudoku, UndoHighlightSameDigit>
     {
-        override public OpList ExecuteOnSubgrid(ClassicSudoku game, int row, int column)
+        override public OpBase ExecuteOnSubgrid(ClassicSudoku game, int row, int column)
         {
             int digit = game.board[row, column];
             return new OpList(
@@ -19,7 +19,7 @@ namespace SudokuLib.Strategy.Classic
             );
         }
 
-        override public OpList ExecuteOnBoard(ClassicSudoku game)
+        override public OpBase ExecuteOnBoard(ClassicSudoku game)
         {
             return new OpList(
                 from i in Enumerable.Range(0, 9)

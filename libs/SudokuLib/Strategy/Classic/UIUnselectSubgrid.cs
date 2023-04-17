@@ -9,7 +9,7 @@ namespace SudokuLib.Strategy.Classic
 {
     public class UIUnselectSubgrid : Strategy<ClassicSudoku, UIUnselectSubgrid>
     {
-        public override OpList ExecuteOnSubgrid(ClassicSudoku game, int row, int column)
+        public override OpBase ExecuteOnSubgrid(ClassicSudoku game, int row, int column)
         {
             return new OpList {
                 UndoHighlightSameDigit.Instance.ExecuteOnSubgrid(game, row, column),

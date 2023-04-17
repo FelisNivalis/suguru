@@ -10,7 +10,7 @@ namespace SudokuLib.Strategy.Classic
 {
     public class UndoHighlightColumn : Strategy<ClassicSudoku, UndoHighlightColumn>
     {
-        override public OpList ExecuteOnSubgrid(ClassicSudoku game, int row, int column)
+        override public OpBase ExecuteOnSubgrid(ClassicSudoku game, int row, int column)
         {
             return new OpList(from i in Enumerable.Range(0, 9) select new SubgridUnselectOp(i, column) as OpBase);
         }

@@ -62,14 +62,14 @@ namespace Sudoku.Executors
         public static void Execute(this EliminateOp op, ClassicSudokuScriptNode scriptNode)
         {
             var idx = Common.GetIdxFromRC(op.Row, op.Column);
-            scriptNode.sudoku.candidates[op.Row, op.Column, op.Digit] = false;
+            scriptNode.sudoku.candidates.Unset(op.Row, op.Column, op.Digit);
             scriptNode.GetDigitNode(idx.Item1, idx.Item2, op.Digit).Call("hide_text", new Variant[] { });
         }
 
         public static void Execute(this UnEliminateOp op, ClassicSudokuScriptNode scriptNode)
         {
             var idx = Common.GetIdxFromRC(op.Row, op.Column);
-            scriptNode.sudoku.candidates[op.Row, op.Column, op.Digit] = true;
+            scriptNode.sudoku.candidates.Set(op.Row, op.Column, op.Digit);
             scriptNode.GetDigitNode(idx.Item1, idx.Item2, op.Digit).Call("show_text", new Variant[] { });
         }
 

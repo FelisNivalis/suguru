@@ -9,7 +9,7 @@ namespace SudokuLib.Strategy.Classic
 {
     public class HiddenSingle : Strategy<ClassicSudoku, HiddenSingle>
     {
-        public override OpList ExecuteOnBoard(ClassicSudoku game)
+        public override OpBase ExecuteOnBoard(ClassicSudoku game)
         {
             var row = new int[9, 9+1];
             var col = new int[9, 9+1];
@@ -21,7 +21,7 @@ namespace SudokuLib.Strategy.Classic
                 for (int c = 0; c < 9; c ++)
                     if (game.board[r, c] == 0)
                         for (int d = 1; d <= 9; d ++)
-                            if (game.candidates[r, c, d])
+                            if (game.candidates.Get(r, c, d))
                             {
                                 if (row[r, d] == -1)
                                     row[r, d] = c;

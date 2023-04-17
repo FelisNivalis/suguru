@@ -34,8 +34,8 @@ func _on_click_digit(event):
 					maingame_node.execute(self, "fill_with")
 					accept_event()
 					return
-			print_debug("clicked on candidate ", digit)
-			accept_event()
+			#print_debug("clicked on candidate ", digit)
+			#accept_event()
 
 
 func hide_text():

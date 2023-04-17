@@ -9,7 +9,7 @@ namespace SudokuLib.Strategy.Classic
 {
     public class HighlightSameDigit : Strategy<ClassicSudoku, HighlightSameDigit>
     {
-        override public OpList ExecuteOnSubgrid(ClassicSudoku game, int row, int column)
+        override public OpBase ExecuteOnSubgrid(ClassicSudoku game, int row, int column)
         {
             int digit = game.board[row, column];
             return new OpList(

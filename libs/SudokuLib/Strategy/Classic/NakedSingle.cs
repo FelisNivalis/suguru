@@ -9,13 +9,11 @@ namespace SudokuLib.Strategy.Classic
 {
     public class NakedSingle : Strategy<ClassicSudoku, NakedSingle>
     {
-        public override OpList ExecuteOnSubgrid(ClassicSudoku game, int row, int column)
+        public override OpBase ExecuteOnSubgrid(ClassicSudoku game, int row, int column)
         {
             if (game.board[row, column] != 0) return new OpList();
-            var candidates = from digit in Enumerable.Range(1, 9)
-            where game.candidates[row, column, digit]
-            select digit;
-            if (candidates.Count() == 1) return UIFillDigit.Instance.ExecuteOnDigit(game, row, column, candidates.First());
+            var candidate = game.candidates.UniqueCandidate(row, column);
+            if (candidate > 0) return UIFillDigit.Instance.ExecuteOnDigit(game, row, column, candidate);
             return new OpList();
         }
     }

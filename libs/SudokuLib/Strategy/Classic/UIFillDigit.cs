@@ -9,7 +9,7 @@ namespace SudokuLib.Strategy.Classic
 {
     public class UIFillDigit : Strategy<ClassicSudoku, UIFillDigit>
     {
-        public override OpList ExecuteOnDigit(ClassicSudoku game, int row, int column, int digit)
+        public override OpBase ExecuteOnDigit(ClassicSudoku game, int row, int column, int digit)
         {
             return new OpList {
                 FillDigit.Instance.ExecuteOnDigit(game, row, column, digit),

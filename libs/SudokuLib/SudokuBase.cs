@@ -10,17 +10,53 @@ namespace SudokuLib
         public int[,] board = new int[9, 9];
         public int[,] init_board = new int[9, 9];
         public int[,] answer = new int[9, 9];
-        public bool[,,] candidates = new bool[9, 9, 10];
+        public Candidates candidates = new();
         protected int seed = -1;
         protected Random rand;
         private const int MAX_TRIES = 10000;
+
+        public class Candidates
+        {
+            int[,] candidates = new int[9, 9];
+            static int[] uniqueCandidate = new int[1 << 9];
+            static Candidates()
+            {
+                for (int i = 1; i <= 9; i++)
+                    uniqueCandidate[1 << i - 1] = i;
+            }
+            public Candidates() { }
+            public Candidates(Candidates c)
+            {
+                candidates = c.candidates.Clone() as int[,];
+            }
+            public bool Get(int r, int c, int d)
+            {
+                return (candidates[r, c] & (1 << d - 1)) > 0;
+            }
+            public bool Set(int r, int c, int d)
+            {
+                bool ret = (candidates[r, c] & (1 << d - 1)) > 0;
+                candidates[r, c] |= 1 << d - 1;
+                return ret;
+            }
+            public bool Unset(int r, int c, int d)
+            {
+                bool ret = (candidates[r, c] & (1 << d - 1)) > 0;
+                candidates[r, c] &= (1 << 9) - 1 - (1 << d - 1);
+                return ret;
+            }
+            public int UniqueCandidate(int r, int c)
+            {
+                return uniqueCandidate[candidates[r, c]];
+            }
+        }
 
         public SudokuBase(SudokuBase other)
         {
             board = other.board.Clone() as int[,];
             init_board = other.init_board.Clone() as int[,];
             answer = other.answer.Clone() as int[,];
-            candidates = other.candidates.Clone() as bool[,,];
+            candidates = new Candidates(other.candidates);
             rand = other.rand;
             seed = other.seed;
         }

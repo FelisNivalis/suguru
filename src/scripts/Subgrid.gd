@@ -34,8 +34,8 @@ func _on_click_answer(event):
 				maingame_node.selected_node = self
 				accept_event()
 				return
-			print_debug("clicked on ", answer_label_node.text)
-			accept_event()
+			#print_debug("clicked on ", answer_label_node.text)
+			#accept_event()
 
 
 func fill_with(num):

@@ -11,39 +11,39 @@ using SudokuLib.Strategy.Op;
 public partial class ClassicSudokuScriptNode: Node
 {
     public ClassicSudoku sudoku = new ClassicSudoku(-1);
-    private Dictionary<string, Func<ClassicSudoku, int, int, OpList>[]> strategyOnSubgridPresets = new()
+    private Dictionary<string, Func<ClassicSudoku, int, int, OpBase>[]> strategyOnSubgridPresets = new()
     {
-        { "select_subgrid", new Func<ClassicSudoku, int, int, OpList>[]
+        { "select_subgrid", new Func<ClassicSudoku, int, int, OpBase>[]
         {
             UISelectSubgrid.Instance.ExecuteOnSubgrid,
         } },
-        { "unselect_subgrid", new Func<ClassicSudoku, int, int, OpList>[]
+        { "unselect_subgrid", new Func<ClassicSudoku, int, int, OpBase>[]
         {
             UIUnselectSubgrid.Instance.ExecuteOnSubgrid,
         } },
-        { "unfill_subgrid", new Func<ClassicSudoku, int, int, OpList>[]
+        { "unfill_subgrid", new Func<ClassicSudoku, int, int, OpBase>[]
         {
             UIUnfillSubgrid.Instance.ExecuteOnSubgrid,
         } },
     };
-    private Dictionary<string, Func<ClassicSudoku, int, int, int, OpList>[]> strategyOnDigitPresets = new()
+    private Dictionary<string, Func<ClassicSudoku, int, int, int, OpBase>[]> strategyOnDigitPresets = new()
     {
-        { "fill_with", new Func<ClassicSudoku, int, int, int, OpList>[]
+        { "fill_with", new Func<ClassicSudoku, int, int, int, OpBase>[]
         {
             UIFillDigit.Instance.ExecuteOnDigit,
         } },
-        { "eliminate_candidate", new Func<ClassicSudoku, int, int, int, OpList>[]
+        { "eliminate_candidate", new Func<ClassicSudoku, int, int, int, OpBase>[]
         {
-            (_, r, c, d) => new OpList { new EliminateOp(r, c, d) },
+            (_, r, c, d) => new EliminateOp(r, c, d),
         } },
-        { "uneliminate_candidate", new Func<ClassicSudoku, int, int, int, OpList>[]
+        { "uneliminate_candidate", new Func<ClassicSudoku, int, int, int, OpBase>[]
         {
-            (_, r, c, d) => new OpList { new UnEliminateOp(r, c, d) },
+            (_, r, c, d) => new UnEliminateOp(r, c, d),
         } },
     };
-    private Dictionary<string, Func<ClassicSudoku, OpList>[]> strategyOnBoardPresets = new()
+    private Dictionary<string, Func<ClassicSudoku, OpBase>[]> strategyOnBoardPresets = new()
     {
-        { "restart", new Func<ClassicSudoku, OpList>[]
+        { "restart", new Func<ClassicSudoku, OpBase>[]
         {
             UndoHighlightRow.Instance.ExecuteOnBoard,
             UndoHighlightSameDigit.Instance.ExecuteOnBoard,
@@ -56,11 +56,11 @@ public partial class ClassicSudokuScriptNode: Node
             FillDigit.Instance.ExecuteOnEverySubgridDigit,
             BasicEliminate.Instance.ExecuteOnEverySubgridDigit,
         } },
-        { "execute_naked_single", new Func<ClassicSudoku, OpList>[]
+        { "execute_naked_single", new Func<ClassicSudoku, OpBase>[]
         {
             NakedSingle.Instance.ExecuteOnEverySubgrid,
         } },
-        { "execute_hidden_single", new Func<ClassicSudoku, OpList>[]
+        { "execute_hidden_single", new Func<ClassicSudoku, OpBase>[]
         {
             HiddenSingle.Instance.ExecuteOnBoard,
         } },
@@ -88,8 +88,7 @@ public partial class ClassicSudokuScriptNode: Node
         (int row, int column) = Common.GetRCFromIdx(idx_grid, idx_subgrid);
         if (strategyOnSubgridPresets.TryGetValue(presetName, out var strategyFuncList))
             foreach (var strategyFunc in strategyFuncList)
-                foreach (var op in strategyFunc(sudoku, row, column))
-                    op.Execute(this);
+                strategyFunc(sudoku, row, column).Execute(this);
     }
 
     public void ExecuteStrategiesOnDigit(int idx_grid, int idx_subgrid, int digit, string presetName)
@@ -97,15 +96,13 @@ public partial class ClassicSudokuScriptNode: Node
         (int row, int column) = Common.GetRCFromIdx(idx_grid, idx_subgrid);
         if (strategyOnDigitPresets.TryGetValue(presetName, out var strategyFuncList))
             foreach (var strategyFunc in strategyFuncList)
-                foreach (var op in strategyFunc(sudoku, row, column, digit))
-                    op.Execute(this);
+                strategyFunc(sudoku, row, column, digit).Execute(this);
     }
 
     public void ExecuteStrategiesOnBoard(string presetName)
     {
         if (strategyOnBoardPresets.TryGetValue(presetName, out var strategyFuncList))
             foreach (var strategyFunc in strategyFuncList)
-                foreach (var op in strategyFunc(sudoku))
-                    op.Execute(this);
+                strategyFunc(sudoku).Execute(this);
     }
 }

@@ -9,7 +9,7 @@ namespace SudokuLib.Strategy.Classic
 {
     public class BasicEliminate : Strategy<ClassicSudoku, BasicEliminate>
     {
-        override public OpList ExecuteOnDigit(ClassicSudoku game, int row, int column, int digit)
+        override public OpBase ExecuteOnDigit(ClassicSudoku game, int row, int column, int digit)
         {
             if (digit == 0)
                 return new OpList();

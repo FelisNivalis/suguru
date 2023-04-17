@@ -5,8 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SudokuLib.Strategy.Op;
+using SudokuLib.Strategy;
+using SudokuLib;
 
-namespace SudokuLib.Strategy.Classic
+namespace Sudoku.Strategy.Classic
 {
     public class HighlightRow : Strategy<ClassicSudoku, HighlightRow>
     {

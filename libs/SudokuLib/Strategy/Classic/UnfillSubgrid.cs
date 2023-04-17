@@ -2,7 +2,7 @@
 
 namespace SudokuLib.Strategy.Classic
 {
-    public class UIUnfillSubgrid : Strategy<ClassicSudoku, UIUnfillSubgrid>
+    public class UnfillSubgrid : Strategy<ClassicSudoku, UnfillSubgrid>
     {
         override public OpBase ExecuteOnSubgrid(ClassicSudoku game, int row, int column)
         {
@@ -12,7 +12,7 @@ namespace SudokuLib.Strategy.Classic
 
             var idx = Common.GetIdxFromRC(row, column);
             return new OpList {
-                FillDigit.Instance.ExecuteOnDigit(game, row, column, 0),
+                new DigitOp<FillOp>(row, column, 0),
 
                 new OpList(
                     from i in Enumerable.Range(0, 9)

@@ -9,13 +9,12 @@ namespace SudokuLib.Strategy.Classic
 {
     public class FillDigit : Strategy<ClassicSudoku, FillDigit>
     {
-        override public OpBase ExecuteOnDigit(ClassicSudoku game, int row, int column, int digit)
+        public override OpBase ExecuteOnDigit(ClassicSudoku game, int row, int column, int digit)
         {
-            OpBase fillOp = new DigitOp<FillOp>(row, column, digit);
-            if (digit == 0) return new OpList { fillOp };
-
-            OpBase hlOp = digit == game.answer[row, column] ? new SubgridOp<SubgridHLDefaultOp>(row, column) : new SubgridOp<SubgridHLErrorOp>(row, column);
-            return new OpList { fillOp, hlOp };
+            return new OpList {
+                new DigitOp<FillOp>(row, column, digit),
+                BasicEliminate.Instance.ExecuteOnDigit(game, row, column, digit),
+            };
         }
     }
 }

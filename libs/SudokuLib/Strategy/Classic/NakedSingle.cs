@@ -13,7 +13,7 @@ namespace SudokuLib.Strategy.Classic
         {
             if (game.board[row, column] != 0) return new EmptyOp();
             var candidate = game.candidates.UniqueCandidate(row, column);
-            if (candidate > 0) return UIFillDigit.Instance.ExecuteOnDigit(game, row, column, candidate);
+            if (candidate > 0) return FillDigit.Instance.ExecuteOnDigit(game, row, column, candidate);
             return new EmptyOp();
         }
 

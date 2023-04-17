@@ -7,6 +7,7 @@ using Sudoku.Executors;
 using SudokuLib;
 using SudokuLib.Strategy;
 using SudokuLib.Strategy.Classic;
+using Sudoku.Strategy.Classic;
 using SudokuLib.Strategy.Op;
 
 public partial class ClassicSudokuScriptNode: Node
@@ -16,18 +17,19 @@ public partial class ClassicSudokuScriptNode: Node
     {
         { "select_subgrid", UISelectSubgrid.Instance },
         { "unselect_subgrid", UIUnselectSubgrid.Instance },
-        { "unfill_subgrid", UIUnfillSubgrid.Instance },
-        { "fill_with", UIFillDigit.Instance },
+        { "unfill_subgrid", UnfillSubgrid.Instance },
+        { "fill_with", FillDigit.Instance },
         { "execute_naked_single", NakedSingle.Instance },
         { "execute_hidden_single", HiddenSingle.Instance },
         { "execute_locked_candidates_type1", LockedCandidatesType1.Instance },
+        { "execute_locked_candidates_type2", LockedCandidatesType2.Instance },
+        { "execute_locked_candidates", new StrategyList<ClassicSudoku> { LockedCandidatesType1.Instance, LockedCandidatesType2.Instance } },
         { "eliminate_candidate", SingleDigitOpStrategy<DigitOp<EliminateOp>, ClassicSudoku>.Instance },
         { "uneliminate_candidate", SingleDigitOpStrategy<DigitOp<UnEliminateOp>, ClassicSudoku>.Instance },
         { "restart", RestartAction.Instance },
     };
 
-    public Node GetGrid(int idx) => GetNode(String.Format("%Grid{0}", idx));
-    public Node GetSubgrid(int i, int j) => GetGrid(i).GetNode(String.Format("%Subgrid{0}", j));
+    public Node GetSubgrid(int i, int j) => GetNode(String.Format("%Grid{0}", i)).GetNode(String.Format("%Subgrid{0}", j));
     public Node GetDigitNode(int i, int j, int d) => GetSubgrid(i, j).GetNode(String.Format("%Digit{0}", d));
 
     public void Eliminate() => BasicEliminate.Instance.ExecuteOnEverySubgridDigit(sudoku);
@@ -37,18 +39,14 @@ public partial class ClassicSudokuScriptNode: Node
         {
             sudoku.Generate();
             ExecuteStrategiesOnBoard("restart");
-            while (true)
-            {
-                bool flag = false;
-                foreach(var strategy in new BaseStrategy<ClassicSudoku>[]{ NakedSingle.Instance, HiddenSingle.Instance, LockedCandidatesType1.Instance })
-                {
-                    var ops = strategy.ExecuteOnBoard(sudoku);
-                    Debug.Print(String.Format("strategy {0}", strategy.GetType().FullName));
-                    if (ops.Execute(this)) { flag = true; }
-                }
-                if (!flag) break;
-            }
-            if (!sudoku.Solved()) break;
+            ClassicSudoku _sudoku = new(sudoku);
+            while ((
+                from strategy in new BaseStrategy<ClassicSudoku>[]
+                    { NakedSingle.Instance, HiddenSingle.Instance, LockedCandidatesType1.Instance }
+                select strategy.ExecuteOnBoard(_sudoku).Execute(_sudoku)
+            ).Any(b => b)) ;
+            if (!_sudoku.Solved())
+                break;
         }
     }
 

@@ -184,4 +184,4 @@ script = ExtResource("3_sj38m")
 [connection signal="pressed" from="HSplitContainer/Menu/MarginContainer/VBoxContainer/RestartButton" to="CSScript" method="Restart"]
 [connection signal="pressed" from="HSplitContainer/Menu/MarginContainer/VBoxContainer/NakedSingleButton" to="." method="execute_on_board" binds= ["execute_naked_single"]]
 [connection signal="pressed" from="HSplitContainer/Menu/MarginContainer/VBoxContainer/HiddenSingleButton" to="." method="execute_on_board" binds= ["execute_hidden_single"]]
-[connection signal="pressed" from="HSplitContainer/Menu/MarginContainer/VBoxContainer/LockedCandidatesButton" to="." method="execute_on_board" binds= ["execute_locked_candidates_type1"]]
+[connection signal="pressed" from="HSplitContainer/Menu/MarginContainer/VBoxContainer/LockedCandidatesButton" to="." method="execute_on_board" binds= ["execute_locked_candidates"]]

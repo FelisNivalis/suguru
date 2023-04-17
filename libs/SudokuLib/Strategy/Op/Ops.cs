@@ -10,16 +10,10 @@ namespace SudokuLib.Strategy.Op
     public interface OpType { }
     public interface DigitOpType : OpType { }
     public interface EliminateOp : DigitOpType { }
-    public interface DigitSelectOp : DigitOpType { }
-    public interface DigitUnselectOp : DigitOpType { }
     public interface UnEliminateOp : DigitOpType { }
     public interface FillOp : DigitOpType { }
 
     public interface SubgridOpType : OpType { }
-    public interface SubgridSelectOp : SubgridOpType { }
-    public interface SubgridUnselectOp : SubgridOpType { }
-    public interface SubgridHLErrorOp : SubgridOpType { }
-    public interface SubgridHLDefaultOp : SubgridOpType { }
 
     public abstract record OpBase { virtual public bool empty { get; } }
     public record EmptyOp : OpBase { override public bool empty { get { return true; } } }

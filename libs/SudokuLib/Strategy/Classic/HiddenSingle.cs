@@ -44,14 +44,14 @@ namespace SudokuLib.Strategy.Classic
                     from d in Enumerable.Range(1, 9)
                     let c = row[r, d]
                     where c >= 0
-                    select UIFillDigit.Instance.ExecuteOnDigit(game, r, c, d) as OpBase
+                    select FillDigit.Instance.ExecuteOnDigit(game, r, c, d) as OpBase
                 ),
                 new OpList(
                     from c in Enumerable.Range(0, 9)
                     from d in Enumerable.Range(1, 9)
                     let r = col[c, d]
                     where r >= 0
-                    select UIFillDigit.Instance.ExecuteOnDigit(game, r, c, d) as OpBase
+                    select FillDigit.Instance.ExecuteOnDigit(game, r, c, d) as OpBase
                 ),
                 new OpList(
                     from idx0 in Enumerable.Range(1, 9)
@@ -59,7 +59,7 @@ namespace SudokuLib.Strategy.Classic
                     let idx1 = grid[idx0, d]
                     where idx1 > 0
                     let rc = Common.GetRCFromIdx(idx0, idx1)
-                    select UIFillDigit.Instance.ExecuteOnDigit(game, rc.Item1, rc.Item2, d) as OpBase
+                    select FillDigit.Instance.ExecuteOnDigit(game, rc.Item1, rc.Item2, d) as OpBase
                 )
             };
         }

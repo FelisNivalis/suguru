@@ -4,8 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SudokuLib.Strategy.Op;
+using SudokuLib.Strategy.Classic;
+using SudokuLib.Strategy;
+using SudokuLib;
 
-namespace SudokuLib.Strategy.Classic
+namespace Sudoku.Strategy.Classic
 {
     public class RestartAction : Strategy<ClassicSudoku, RestartAction>
     {
@@ -20,7 +23,7 @@ namespace SudokuLib.Strategy.Classic
                     from d in Enumerable.Range(1, 9)
                     select new DigitOp<UnEliminateOp>(r, c, d) as OpBase
                 ),
-                FillDigit.Instance.ExecuteOnEverySubgridDigit(game),
+                SingleDigitOpStrategy<DigitOp<FillOp>, ClassicSudoku>.Instance.ExecuteOnEverySubgridDigit(game),
                 BasicEliminate.Instance.ExecuteOnEverySubgridDigit(game),
             };
         }

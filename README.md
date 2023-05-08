@@ -1,4 +1,4 @@
-# (WIP) Suguru - A sudoku trainer
+# (WIP) Suguru ~~過ぐる~~ - A sudoku trainer
 ## (Planned) Features-
 - Practising a solving technique
 - Classical Sudoku, and other variants

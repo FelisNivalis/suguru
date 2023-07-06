@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Godot;
 using Sudoku.Executors;
@@ -39,16 +40,21 @@ public partial class ClassicSudokuScriptNode: Node
     {
         while (true)
         {
+            var startTime = DateTime.Now;
             sudoku.Generate();
+            Debug.Print(String.Format("Generate {0}", (DateTime.Now - startTime).TotalMilliseconds));
             ExecuteStrategiesOnBoard("restart");
             ClassicSudoku _sudoku = new(sudoku);
+            startTime = DateTime.Now;
             while ((
                 from strategy in new BaseStrategy<ClassicSudoku>[]
-                    { NakedSingle.Instance, HiddenSingle.Instance, LockedCandidatesType1.Instance,
-                      NakedPair.Instance, NakedTuple.Instance, NakedQuadruple.Instance,
-                      HiddenPair.Instance, HiddenTuple.Instance, HiddenQuadruple.Instance }
+                    { NakedSingle.Instance, HiddenSingle.Instance,
+                      LockedCandidatesType1.Instance, LockedCandidatesType2.Instance,
+                      NakedPair.Instance, HiddenPair.Instance, NakedTuple.Instance,
+                      HiddenTuple.Instance, NakedQuadruple.Instance, HiddenQuadruple.Instance }
                 select strategy.ExecuteOnBoard(_sudoku).Execute(_sudoku)
             ).Any(b => b)) ;
+            Debug.Print(String.Format("Solve    {0}", (DateTime.Now - startTime).TotalMilliseconds));
             if (!_sudoku.Solved())
                 break;
         }

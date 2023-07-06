@@ -10,7 +10,7 @@ namespace SudokuLib.Strategy.Op
     public interface FillOp : DigitOpType { }
 
     public interface SubgridOpType : OpType { }
-
+    
 
     public abstract record OpBase { }
 

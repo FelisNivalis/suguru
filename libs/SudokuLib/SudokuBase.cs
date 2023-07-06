@@ -1,81 +1,32 @@
-using System.Diagnostics;
-using System.Linq;
-using System.Threading;
-using System.Xml;
-
 namespace SudokuLib
 {
+    public class Board
+    {
+        public int[,] board = new int[9, 9];
+        public Candidates candidates = new();
+        public CandidatesCounter nCandidates = new();
+    }
+    public class ClueData
+    {
+        public int[] row = new int[9];
+        public int[] col = new int[9];
+        public int[] grid = new int[10];
+    }
     public abstract class SudokuBase
     {
+        Dictionary<Type, SudokuData> dataDict = new();
         public int[,] board = new int[9, 9];
         public int[,] init_board = new int[9, 9];
         public int[,] answer = new int[9, 9];
         public Candidates candidates = new();
         protected int seed = -1;
         protected Random rand;
-        private const int MAX_TRIES = 10000;
-
-        public class Candidates
-        {
-            int[,] candidates = new int[9, 9];
-            static int[] uniqueCandidate = new int[1 << 9];
-            static Candidates()
-            {
-                for (int i = 1; i <= 9; i++)
-                    uniqueCandidate[(1 << 9) - 1 - (1 << i - 1)] = i;
-            }
-            public Candidates() { }
-            public Candidates(Candidates c)
-            {
-                candidates = c.candidates.Clone() as int[,];
-            }
-            public int GetBits(int r, int c)
-            {
-                return candidates[r, c] ^ (1 << 9) - 1;
-            }
-            public bool CheckAtMost(int r, int c, int d)
-            {
-                return (GetBits(r, c) | d) == d;
-            }
-            public bool CheckAtMost(int r, int c, in int[] ds)
-            {
-                return CheckAtMost(r, c, ds.Select(_d => 1 << _d - 1).Sum());
-            }
-            public bool CheckAny(int r, int c, int d)
-            {
-                return (GetBits(r, c) & d) != 0;
-            }
-            public bool CheckAny(int r, int c, in int[] ds)
-            {
-                return CheckAny(r, c, ds.Select(_d => 1 << _d - 1).Sum());
-            }
-            public bool CheckValid(int r, int c, int d)
-            {
-                return (candidates[r, c] & (1 << d - 1)) == 0;
-            }
-            public bool Eliminate(int r, int c, int d)
-            {
-                bool ret = (candidates[r, c] & (1 << d - 1)) > 0;
-                candidates[r, c] |= 1 << d - 1;
-                return ret;
-            }
-            public bool Uneliminate(int r, int c, int d)
-            {
-                bool ret = (candidates[r, c] & (1 << d - 1)) > 0;
-                candidates[r, c] &= (1 << 9) - 1 - (1 << d - 1);
-                return ret;
-            }
-            public int UniqueCandidate(int r, int c)
-            {
-                return uniqueCandidate[candidates[r, c]];
-            }
-        }
 
         public SudokuBase(SudokuBase other)
         {
-            board = other.board.Clone() as int[,];
-            init_board = other.init_board.Clone() as int[,];
-            answer = other.answer.Clone() as int[,];
+            board = (int[,])other.board.Clone();
+            init_board = (int[,])other.init_board.Clone();
+            answer = (int[,])other.answer.Clone();
             candidates = new Candidates(other.candidates);
             rand = other.rand;
             seed = other.seed;
@@ -87,6 +38,17 @@ namespace SudokuLib
             rand = new Random();
         }
 
+        public D GetData<D>() where D : SudokuData
+        {
+            if (!dataDict.TryGetValue(typeof(D), out SudokuData? data))
+            {
+                D newdata = Activator.CreateInstance<D>();
+                dataDict[typeof(D)] = newdata;
+                return newdata;
+            }
+            return (D)data;
+        }
+
         public bool Solved()
         {
             for (int r = 0; r < 9; r++) for (int c = 0; c < 9; c++) if (board[r, c] == 0) return false;
@@ -95,14 +57,13 @@ namespace SudokuLib
 
         public void Generate()
         {
-            var startTime = DateTime.Now;
             Clear();
             int[,]? _answer;
             //while (!Solve(out _answer, ref board, out _
             while (!Solve2(1, ref board, out _answer)) ;
             if (_answer == null) return;
             answer = _answer;
-            board = answer.Clone() as int[,];
+            board = (int[,])answer.Clone();
             while (true)
             {
                 int[] order = Enumerable.Range(0, 9 * 9).ToArray();
@@ -115,20 +76,14 @@ namespace SudokuLib
                     if (board[x, y] == 0)
                         continue;
                     board[x, y] = 0;
-                    bool unique;
-                    //if (Solve(out _, ref board, out unique) && unique)
                     if (!Solve2(2, ref board, out _))
-                    {
                         flag = true;
-                        break;
-                    }
                     else
                         board[x, y] = answer[x, y];
                 }
                 if (!flag) break;
             }
-            init_board = board.Clone() as int[,];
-            Debug.Print(String.Format("{0}", (DateTime.Now - startTime).TotalMilliseconds));
+            init_board = (int[,])board.Clone();
         }
 
         protected void Clear()
@@ -145,14 +100,12 @@ namespace SudokuLib
             public int idx = 0;
             public int digit = 0;
             public int[,] board = new int[9, 9];
-            public int[,] candidates = new int[9, 9];
-            public int[,] nCandidatesRow = new int[9, 10];
-            public int[,] nCandidatesCol = new int[9, 10];
-            public int[,] nCandidatesGrid = new int[10, 10];
+            public Candidates candidates = new();
+            public CandidatesCounter nCandidates = new();
             public StackInfo(in int[,] board)
             {
                 // New stack. Find the first empty subgrid.
-                this.board = board.Clone() as int[,];
+                this.board = (int[,])board.Clone();
                 Next();
                 // Init candidates
                 Queue<(int, int, int)> q = new();
@@ -160,7 +113,7 @@ namespace SudokuLib
                     for (int j = 0; j < 9; j++)
                         if (board[i, j] > 0)
                             q.Enqueue((i, j, board[i, j]));
-                Fill(ref q);
+                FillCont(ref q);
             }
             public void Next()
             {
@@ -171,11 +124,9 @@ namespace SudokuLib
             {
                 idx = s.idx;
                 digit = s.digit;
-                board = s.board.Clone() as int[,];
-                candidates = s.candidates.Clone() as int[,];
-                nCandidatesRow = s.nCandidatesRow.Clone() as int[,];
-                nCandidatesCol = s.nCandidatesCol.Clone() as int[,];
-                nCandidatesGrid = s.nCandidatesGrid.Clone() as int[,];
+                board = (int[,])s.board.Clone();
+                candidates = new Candidates(s.candidates);
+                nCandidates = new CandidatesCounter(s.nCandidates);
             }
             static public int[] cand = new int[1 << 9];
             static StackInfo()
@@ -185,67 +136,65 @@ namespace SudokuLib
                     cand[(1 << 9) - 1 - (1 << i)] = i + 1;
             }
             public record struct UpdateCandidatesType(bool CheckRow, bool CheckCol, bool CheckGrid) { }
-            public bool UpdateCandidates(ref Queue<(int, int, int)> q, int r, int c, int d, UpdateCandidatesType type)
+            public bool Eliminate(ref Queue<(int, int, int)> q, int r, int c, int d, UpdateCandidatesType type)
             {
                 // Update after crossing out a candidate
-                int b = 1 << d - 1;
-                if (board[r, c] == 0 && (candidates[r, c] & b) == 0)
+                if (board[r, c] == 0 && candidates.CheckValid(r, c, d))
                 {
-                    candidates[r, c] |= b;
+                    candidates.Eliminate(r, c, d);
                     // Check naked single
-                    int cand = StackInfo.cand[candidates[r, c]];
+                    int cand = candidates.UniqueCandidate(r, c);
                     if (cand > 0) q.Enqueue((r, c, cand));
-                    if (candidates[r, c] == (1 << 9) - 1) return false;
-                    nCandidatesRow[r, d]++;
+                    if (candidates.CheckInvalid(r, c)) return false;
+                    nCandidates.Eliminate(r, c, d);
                     // nCandidatesRow
                     if (type.CheckRow)
                     {
                         // Hidden single
-                        if (nCandidatesRow[r, d] == 8)
+                        if (nCandidates.nRow[r, d] == 8)
                             for (int j = 0; j < 9; j++)
-                                if ((candidates[r, j] & b) == 0)
+                                if (candidates.CheckValid(r, j, d))
                                     q.Enqueue((r, j, d));
-                        if (nCandidatesRow[r, d] == 9) return false;
+                        if (nCandidates.nRow[r, d] == 9) return false;
                     }
                     // nCandidatesCol
-                    nCandidatesCol[c, d]++;
                     if (type.CheckCol)
                     {
                         // Hidden single
-                        if (nCandidatesCol[c, d] == 8)
+                        if (nCandidates.nCol[c, d] == 8)
                             for (int j = 0; j < 9; j++)
-                                if ((candidates[j, c] & b) == 0)
+                                if (candidates.CheckValid(j, c, d))
                                     q.Enqueue((j, c, d));
-                        if (nCandidatesCol[c, d] == 9) return false;
+                        if (nCandidates.nCol[c, d] == 9) return false;
                     }
                     
                     var (idx_grid, idx_subgrid) = Common.GetIdxFromRC(r, c);
-                    nCandidatesGrid[idx_grid, d]++;
                     if (type.CheckGrid)
                     {
                         // Hidden single
-                        if (nCandidatesGrid[idx_grid, d] == 8)
+                        if (nCandidates.nGrid[idx_grid, d] == 8)
                             for (int j = 0; j < 9; j++)
                             {
                                 var (_r, _c) = Common.GetRCFromIdx(idx_grid, j + 1);
-                                if ((candidates[_r, _c] & b) == 0)
+                                if (candidates.CheckValid(_r, _c, d))
                                     q.Enqueue((_r, _c, d));
                             }
-                        if (nCandidatesGrid[idx_grid, d] == 9) return false;
+                        if (nCandidates.nGrid[idx_grid, d] == 9) return false;
                     }
                 }
                 return true;
             }
-            public bool Fill(ref Queue<(int, int, int)> q)
+            public bool FillCont(ref Queue<(int, int, int)> q)
             {
+                // Fill continuously until queue empty.
                 while (q.Count > 0)
                 {
                     var (r, c, d) = q.Dequeue();
-                    if (!_Fill(ref q, r, c, d)) return false;
+                    if (!Fill(ref q, r, c, d)) return false;
                 }
                 return true;
             }
-            public bool _Fill(ref Queue<(int, int, int)> q, int r, int c, int d)
+            public bool Fill(ref Queue<(int, int, int)> q, int r, int c, int d)
             {
                 board[r, c] = d;
                 var idx = Common.GetIdxFromRC(r, c);
@@ -253,10 +202,10 @@ namespace SudokuLib
                 {
                     // Don't check row when crossing out same row, similar for col
                     // For grid, only when crossing out the last one of the grid, and not in the same grid as (_r, _c)
-                    if (!UpdateCandidates(ref q, r, i, d, new UpdateCandidatesType(false, true, i % 3 == 2 && i / 3 != c / 3))) return false;
-                    if (!UpdateCandidates(ref q, i, c, d, new UpdateCandidatesType(true, false, i % 3 == 2 && i / 3 != r / 3))) return false;
+                    if (!Eliminate(ref q, r, i, d, new UpdateCandidatesType(false, true, i % 3 == 2 && i / 3 != c / 3))) return false;
+                    if (!Eliminate(ref q, i, c, d, new UpdateCandidatesType(true, false, i % 3 == 2 && i / 3 != r / 3))) return false;
                     var (_r, _c) = Common.GetRCFromIdx(idx.Item1, i + 1);
-                    if (!UpdateCandidates(ref q, _r, _c, d, new UpdateCandidatesType(_r != r && _c % 3 == 2, _c != c && _r % 3 == 2, false))) return false;
+                    if (!Eliminate(ref q, _r, _c, d, new UpdateCandidatesType(_r != r && _c % 3 == 2, _c != c && _r % 3 == 2, false))) return false;
                 }
                 return true;
             }
@@ -285,14 +234,13 @@ namespace SudokuLib
                 // Try every candidate
                 for (s.digit++; s.digit <= 9; s.digit++)
                 {
-                    int b = 1 << s.digit - 1;
-                    if ((s.candidates[r, c] & b) == 0)
+                    if (s.candidates.CheckValid(r, c, s.digit))
                     {
                         // Until no hidden singles and naked singles
                         Queue<(int, int, int)> q = new();
                         q.Enqueue((r, c, s.digit));
                         var ns = new StackInfo(s);
-                        if (ns.Fill(ref q))
+                        if (ns.FillCont(ref q))
                         {
                             ns.Next();
                             stack.Push(s);

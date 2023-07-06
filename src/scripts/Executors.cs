@@ -61,9 +61,14 @@ namespace Sudoku.Executors
             //if (scriptNode.sudoku.board[op.Row, op.Column] > 0)
             var idx = Common.GetIdxFromRC(op.Row, op.Column);
             scriptNode.GetSubgrid(idx.Item1, idx.Item2).Call("fill_with", new Variant[] { op.Digit });
-            (scriptNode.GetSubgrid(idx.Item1, idx.Item2).GetNode("%AnswerLabel") as Label).LabelSettings =
-                (op.Digit == scriptNode.sudoku.answer[op.Row, op.Column]) ?
-                SubgridLabel_DefaultSettings : SubgridLabel_ErrorSettings;
+            using (var label = scriptNode.GetSubgrid(idx.Item1, idx.Item2).GetNode("%AnswerLabel") as Label)
+            {
+                if (label is not null)
+                    label.LabelSettings =
+                        op.Digit == scriptNode.sudoku.answer[op.Row, op.Column] ?
+                        SubgridLabel_DefaultSettings : SubgridLabel_ErrorSettings;
+            }
+
             op.Execute(scriptNode.sudoku);
         }
 
